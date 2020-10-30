@@ -1,3 +1,4 @@
 .env
 .envprod
 .htaccess
+/node_modules
