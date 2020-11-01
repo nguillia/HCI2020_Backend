@@ -4,7 +4,7 @@ const { handleResponse } = require('../services/utils');
 const { twitchMiddleware } = require('../services/games/middleware');
 
 // Get the list of users - Test route
-router.get('/games/list', twitchMiddleware, (req, res) => {
+router.get('/list', twitchMiddleware, (req, res) => {
   const options = {
     method: 'POST',
     url: 'https://api.igdb.com/v4/games',

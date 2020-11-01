@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  app.use('', require('./games'));
+  app.use('api/games', require('./games'));
 
   console.log('Routes registered.');
 };
