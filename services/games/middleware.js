@@ -6,6 +6,13 @@ const axios = require('axios');
 
 let token = null;
 
+/**
+ * Twitch (Games API) middleware. Middleware request a token from Twitch and delegates this to the next request.
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 const twitchMiddleware = async (req, res, next) => {
   const data = JSON.stringify({
     client_id: process.env.TWITCH_CLIENT_ID,
