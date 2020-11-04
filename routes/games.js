@@ -45,4 +45,24 @@ router.get('/artworks', twitchMiddleware, (req, res) => {
     });
 });
 
+router.get('/genres', twitchMiddleware, (req, res) => {
+  const options = {
+    method: 'POST',
+    url: 'https://api.igdb.com/v4/genres',
+    headers: {
+      'Client-ID': req.headers['Client-ID'],
+      Authorization: req.headers['Authorization'],
+    },
+    data: 'fields name,slug;',
+  };
+
+  axios(options)
+    .then((response) => {
+      return handleResponse(req, res, 200, { success: true, genres: response.data });
+    })
+    .catch((error) => {
+      return handleResponse(req, res, 401);
+    });
+});
+
 module.exports = router;
