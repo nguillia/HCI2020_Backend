@@ -3,15 +3,22 @@ const axios = require('axios');
 const { handleResponse } = require('../services/utils');
 const { twitchMiddleware } = require('../services/games/middleware');
 
+// 6 = Windows
+// 14 = Mac
+// 3 = Linux
+
+axios.defaults.method = 'POST';
+axios.defaults.baseURL = process.env.BASE_URL;
+axios.defaults.headers.common['Client-ID'] = process.env.TWITCH_CLIENT_ID;
+
 /**
  * Get a list containing 10 games (by ID).
  */
 router.get('/list', twitchMiddleware, (req, res) => {
   const options = {
-    method: 'POST',
-    url: 'https://api.igdb.com/v4/games',
+    url: 'games',
     headers: {
-      'Client-ID': req.headers['Client-ID'],
+      // 'Client-ID': req.headers['Client-ID'],
       Authorization: req.headers['Authorization'],
     },
   };
@@ -28,7 +35,7 @@ router.get('/list', twitchMiddleware, (req, res) => {
 router.get('/artworks', twitchMiddleware, (req, res) => {
   const options = {
     method: 'POST',
-    url: 'https://api.igdb.com/v4/artworks',
+    url: `${process.env.BASE_URL}/artworks`,
     headers: {
       'Client-ID': req.headers['Client-ID'],
       Authorization: req.headers['Authorization'],
@@ -48,7 +55,7 @@ router.get('/artworks', twitchMiddleware, (req, res) => {
 router.get('/genres', twitchMiddleware, (req, res) => {
   const options = {
     method: 'POST',
-    url: 'https://api.igdb.com/v4/genres',
+    url: `${process.env.BASE_URL}/genres`,
     headers: {
       'Client-ID': req.headers['Client-ID'],
       Authorization: req.headers['Authorization'],
