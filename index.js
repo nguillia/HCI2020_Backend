@@ -41,7 +41,7 @@ require('./routes/routes')(app);
 
 /* FUNCTIONS */
 database.init();
-gamepuller.pullGames();
+//gamepuller.pullGames();
 
 /* LISTEN */
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
