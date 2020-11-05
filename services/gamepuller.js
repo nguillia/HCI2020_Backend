@@ -1,29 +1,76 @@
+const _ = require('lodash');
 const axios = require('axios');
+const fs = require('fs');
+const Sequelize = require('sequelize');
+const { sequelize } = require('../database/init');
+const { resolve } = require('path');
 
 const pullGames = async () => {
-  const token = await getTwitchToken();
-  if (token !== null) getGames(token, 0);
+  const games = loadData();
+
+  const genres = _.filter(
+    _.uniqBy(
+      _.flatten(
+        _.map(games, (game) => {
+          return game.genres;
+        })
+      ),
+      'id'
+    ),
+    (genre) => genre !== undefined
+  );
+
+  _.map(genres, ({ name }) => {
+    console.log(name);
+  });
+  console.log(genres);
 };
 
-const getGames = (token, offset) => {
-  const options = {
-    method: 'POST',
-    url: `${process.env.BASE_URL}/games`,
-    headers: {
-      Accept: 'application/json',
-      'Client-ID': process.env.TWITCH_CLIENT_ID,
-      Authorization: `Bearer ${token}`,
-    },
-    data: `fields cover.image_id,first_release_date,follows,game_modes.name,genres.name,name,platforms.name,screenshots.image_id,summary,aggregated_rating,rating,total_rating,videos.name,videos.video_id; where platforms=(3, 6, 14) & category=0; limit 500; offset ${offset};`,
-  };
+const sleep = (ms) => {
+  return new Promise((resolve) => {
+    console.log(`Sleeping ${ms}ms.`);
+    setTimeout(resolve, ms);
+  });
+};
 
-  axios(options)
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+const storeData = (data) => {
+  try {
+    fs.writeFileSync('./games', JSON.stringify(data));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const loadData = () => {
+  try {
+    return JSON.parse(fs.readFileSync('./games', 'utf8'));
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+const getGames = async (token, offset) => {
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: 'POST',
+      url: `${process.env.BASE_URL}/games`,
+      headers: {
+        Accept: 'application/json',
+        'Client-ID': process.env.TWITCH_CLIENT_ID,
+        Authorization: `Bearer ${token}`,
+      },
+      data: `fields cover.image_id,first_release_date,follows,game_modes.name,genres.name,name,platforms.name,screenshots.image_id,summary,aggregated_rating,rating,total_rating,videos.name,videos.video_id; where platforms=(3, 6, 14) & category=0; limit 500; offset ${offset};`,
+    };
+
+    axios(options)
+      .then((response) => {
+        return resolve(response.data);
+      })
+      .catch((error) => {
+        return reject(null);
+      });
+  });
 };
 
 const getTwitchToken = async () => {
@@ -53,7 +100,7 @@ const getTwitchToken = async () => {
       })
       .catch((error) => {
         console.log(error);
-        return resolve(null);
+        return reject(null);
       });
   });
 };
