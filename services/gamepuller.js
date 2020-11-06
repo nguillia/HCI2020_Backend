@@ -265,7 +265,7 @@ const connectGametoGenre = (games) => {
           genres.forEach((genre) => {
             Genre.findOne({ where: { name: genre.name } })
               .then((genreObj) => {
-                genreObj.addGame(gameObj);
+                gameObj.addGenre(genreObj);
                 resolve(true);
               })
               .catch((err) => reject(err));

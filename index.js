@@ -11,7 +11,6 @@ const cors = require('cors');
 
 /* CUSTOM PACKAGES */
 const database = require('./database/init');
-const gamepuller = require('./services/gamepuller');
 /* END CUSTOM PACKAGES */
 
 /* VARIABLES */
@@ -41,7 +40,14 @@ require('./routes/routes')(app);
 
 /* FUNCTIONS */
 database.init();
-gamepuller.pullGames();
+
+const gamePuller = require('./services/gamepuller');
+gamePuller.pullGames();
+
+const { getGames } = require('./database/utils/games');
+getGames()
+  .then((r) => console.log(r))
+  .catch((err) => console.log(err));
 
 /* LISTEN */
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
