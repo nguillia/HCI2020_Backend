@@ -2,77 +2,189 @@ const _ = require('lodash');
 const axios = require('axios');
 const fs = require('fs');
 
-const { Platform, Screenshot, GameMode, Game, Video, Genre } = require('../database/init');
+const { Platform, Screenshot, Gamemode, Game, Video, Genre } = require('../database/init');
+const { resolve } = require('path');
 
 /**
  * Populate the database and parse the game data.
  */
-const pullGames = async () => {
-  const games = loadData('./games');
+const pullGames = () => {
+  const i = 0;
+  const amount = 33681;
+  // const amount = 10;
+  let games = loadData('./games');
+  console.log(games[801]);
+  games = games.slice(i * amount, (i + 1) * amount);
+
+  amountChecker(games);
 
   // createGames(games)
-  //   .then((i) => console.log(`${i.length} Games added.`))
+  //   .then((i) => console.log(`${i} Games added.`))
   //   .catch((err) => console.log(err));
 
   // createGenres(games)
   //   .then((i) => console.log(`${i.length} Genres added.`))
   //   .catch((err) => console.log(err));
 
-  // createGameModes(games)
+  // createGamemodes(games)
   //   .then((i) => console.log(`${i.length} Gamemodes added.`))
   //   .catch((err) => console.log(err));
 
-  // const i = 0;
-  // createScreenshots(games, i * 1000, (i + 1) * 1000)
-  //   .then((c) => console.log(`${c} Screenshots added.`))
+  // createVideos(games)
+  //   .then((i) => console.log(i ? 'Videos added.' : 'Videos not added'))
   //   .catch((err) => console.log(err));
 
-  // const i = 0;
-  // createVideos(games, i * 1000, (i + 1) * 1000)
-  //   .then((c) => console.log(`${c} Videos added.`))
+  // createScreenshots(games)
+  //   .then((i) => console.log(i ? 'Screenshots added.' : 'Screenshots not added'))
   //   .catch((err) => console.log(err));
 
-  // connectGametoGameMode(games)
-  //   .then(() => console.log('ok'))
+  // connectVideoToGame(games)
+  //   .then((i) => console.log(`${i} Videos added.`))
   //   .catch((err) => console.log(err));
 
-  // connectGametoGenre(games)
-  //   .then(() => console.log('ok'))
+  // connectScreenshotToGame(games)
+  //   .then((i) => console.log(`${i} Screenshots added.`))
   //   .catch((err) => console.log(err));
 
-  // connectGametoPlatform(games)
-  //   .then(() => console.log('ok'))
+  // connectGamemodeToGame(games)
+  //   .then((i) => console.log(`${i} Game-Gamemode relations added.`))
   //   .catch((err) => console.log(err));
+
+  // connectGenreToGame(games)
+  //   .then((i) => console.log(`${i} Game-Genre relations added.`))
+  //   .catch((err) => console.log(err));
+
+  // connectPlatformToGame(games)
+  //   .then((i) => console.log(`${i} Game-Platform relations added.`))
+  //   .catch((err) => console.log(err));
+};
+
+const amountChecker = (games) => {
+  const gamemodes = _.uniqBy(
+    _.flatten(
+      _.map(
+        _.filter(games, (game) => game.game_modes !== undefined && game.game_modes.length > 0),
+        (game) => {
+          return game.game_modes;
+        }
+      )
+    ),
+    'id'
+  );
+  const genres = _.uniqBy(
+    _.flatten(
+      _.map(
+        _.filter(games, (game) => game.genres !== undefined && game.genres.length > 0),
+        (game) => {
+          return game.genres;
+        }
+      )
+    ),
+    'id'
+  );
+  const gamesWGenre = _.filter(games, (game) => game.genres !== undefined && game.genres.length > 0);
+  const screenshots = _.uniqBy(
+    _.flatten(
+      _.map(
+        _.filter(games, (game) => game.screenshots !== undefined && game.screenshots.length > 0),
+        (game) => {
+          return game.screenshots;
+        }
+      )
+    ),
+    'image_id'
+  );
+  const videos = _.filter(
+    _.uniqBy(
+      _.flatten(
+        _.map(
+          _.filter(games, (game) => game.videos !== undefined && game.videos.length > 0),
+          (game) => {
+            return game.videos;
+          }
+        )
+      ),
+      'video_id'
+    ),
+    (video) => video.name === 'Trailer'
+  );
+
+  // Combinations
+  const genresRecords = _.flatten(
+    _.map(
+      _.filter(games, (game) => game.genres !== undefined && game.genres.length > 0),
+      (game) => {
+        return game.genres;
+      }
+    )
+  );
+  const gamemodeRecords = _.flatten(
+    _.map(
+      _.filter(games, (game) => game.game_modes !== undefined && game.game_modes.length > 0),
+      (game) => {
+        return game.game_modes;
+      }
+    )
+  );
+  const platformsRecords = _.flatten(
+    _.map(
+      _.filter(games, (game) => game.platforms !== undefined && game.platforms.length > 0),
+      (game) => {
+        return game.platforms;
+      }
+    )
+  );
+
+  console.log(`There should be ${games.length} games.`);
+  console.log(`There should be ${gamemodes.length} gamemodes.`);
+  console.log(`There should be ${genres.length} genres.`);
+  console.log(`There should be ${gamesWGenre.length} games with at least one genre.`);
+  console.log(`There should be ${screenshots.length} screenshots.`);
+  console.log(`There should be ${videos.length} videos.`);
+  console.log(`There should be ${genresRecords.length} game-genre records.`);
+  console.log(`There should be ${gamemodeRecords.length} game-gamemode records.`);
+  console.log(`There should be ${platformsRecords.length} game-platform records.`);
 };
 
 /**
  * Insert the games into the database.
  * @param {array} games The array containing the games and all their data.
  */
-const createGames = async (games) => {
+const createGames = (games) => {
   const newGames = _.map(games, (game) => {
     return {
       name: game.name,
       first_release_date: game.first_release_date,
-      rating: game.rating ? parseInt(game.rating) : null,
-      total_rating: game.total_rating ? parseInt(game.total_rating) : null,
-      aggregated_rating: game.aggregated_rating ? parseInt(game.aggregated_rating) : null,
+      ...(game.rating && { rating: game.rating }),
+      ...(game.total_rating && { total_rating: game.total_rating }),
+      ...(game.aggregated_rating && { aggregated_rating: game.aggregated_rating }),
       summary: game.summary,
-      cover_id: game.cover ? game.cover.image_id : null,
-      followers: game.follows ? game.follows : 0,
+      ...(game.cover && { cover_id: game.cover.image_id }),
+      ...(game.follows && { followers: game.follows }),
     };
   });
 
-  console.log(`There are ${newGames.length} game modes.`);
-  return Promise.all([Game.bulkCreate(newGames)]);
+  console.log(`There are ${newGames.length} games.`);
+  let c = 0;
+  return new Promise(async (resolve, reject) => {
+    for (let i = 0; i < newGames.length; i++) {
+      try {
+        await Game.create(newGames[i]);
+        c = c + 1;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    resolve(c);
+  });
 };
 
 /**
- * Insert the gamemodes into the database.
- * @param {array} games The array containing all games and their corresponding gamemodes.
+ * Insert the Gamemodes into the database.
+ * @param {array} games The array containing all games and their corresponding Gamemodes.
  */
-const createGameModes = async (games) => {
-  const gameModes = _.map(
+const createGamemodes = (games) => {
+  const Gamemodes = _.map(
     _.filter(
       _.uniqBy(
         _.flatten(
@@ -88,15 +200,15 @@ const createGameModes = async (games) => {
       return { name: name };
     }
   );
-  console.log(`There are ${gameModes.length} game modes.`);
-  return Promise.all([GameMode.bulkCreate(gameModes)]);
+  console.log(`There are ${Gamemodes.length} game modes.`);
+  return Promise.all([Gamemode.bulkCreate(Gamemodes)]);
 };
 
 /**
  * Insert the genres into the database.
  * @param {array} games The array containging games and their corresponding genres.
  */
-const createGenres = async (games) => {
+const createGenres = (games) => {
   const genres = _.map(
     _.filter(
       _.uniqBy(
@@ -113,196 +225,296 @@ const createGenres = async (games) => {
       return { name: name };
     }
   );
-  console.log(`There are ${genres.length} game modes.`);
+  console.log(`There are ${genres.length} genres.`);
   return Promise.all([Genre.bulkCreate(genres)]);
 };
 
 /**
- * Insert the selected screenshots into the database.
+ * Insert the screenshots into the database.
  * @param {array} games The array containing all games and their corresponding screenshots.
- * @param {integer} start The start of the game list for splitting.
- * @param {integer} end The end of the game list for splitting.
  */
-const createScreenshots = async (games, start, end) => {
-  const screenshots = _.filter(
-    _.map(games, (game) => {
-      return { game: game.name, screenshots: game.screenshots };
-    }),
-    (item) => item.screenshots !== undefined
-  ).slice(start, end);
-
-  return new Promise((resolve, reject) => {
-    screenshots.forEach(({ game, screenshots: list }) => {
-      createSubScreens(game, list)
-        .then(() => resolve(count))
-        .catch((err) => reject(err));
-    });
+const createScreenshots = (games) => {
+  const screenshots = _.map(
+    _.uniqBy(
+      _.flatten(
+        _.map(
+          _.filter(games, (game) => game.screenshots !== undefined && game.screenshots.length > 0),
+          (game) => {
+            return game.screenshots;
+          }
+        )
+      ),
+      'image_id'
+    ),
+    (item) => {
+      return { screenshot_id: item.image_id };
+    }
+  );
+  console.log(`There are ${screenshots.length} screenshots.`);
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Screenshot.bulkCreate(screenshots);
+      resolve(true);
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 
 /**
- * Create screenshots for a specific game.
- * @param {object} game The game the screenshots belong to.
- * @param {array} list The list containing the screenshots.
- */
-const createSubScreens = (game, list) => {
-  return new Promise((resolve, reject) => {
-    Game.findOne({ where: { name: game } })
-      .then((gameObj) => {
-        list.forEach((s) => {
-          Screenshot.create({ screenshot_id: s.image_id })
-            .then((obj) => {
-              obj
-                .setGame(gameObj)
-                .then(() => resolve(true))
-                .catch(reject(false));
-            })
-            .catch(() => reject(false));
-        });
-      })
-      .catch((err) => console.log(err));
-  });
-};
-
-/**
- * Insert the selected videos into the database.
+ * Insert the videos into the database.
  * @param {array} games The array containing all games and their corresponsing videos.
- * @param {integer} start The start of the game list for splitting.
- * @param {integer} end The end of the game list for splitting.
  */
-const createVideos = async (games, start, end) => {
+const createVideos = (games) => {
   const videos = _.filter(
-    _.map(games, (game) => {
-      return {
-        game: game.name,
-        videos: _.filter(game.videos, (v) => {
-          return v.name === 'Trailer';
-        }),
-      };
-    }),
-    (item) => item.videos !== undefined && item.videos.length > 0
-  ).slice(start, end);
+    _.uniqBy(
+      _.flatten(
+        _.map(
+          _.filter(games, (game) => game.videos !== undefined && game.videos.length > 0),
+          (game) => {
+            return game.videos;
+          }
+        )
+      ),
+      'video_id'
+    ),
+    (video) => video.name === 'Trailer'
+  );
 
-  return new Promise((resolve, reject) => {
-    videos.forEach(({ game, videos: list }) => {
-      createSubVideos(game, list)
-        .then(() => resolve(count))
-        .catch((err) => reject(err));
-    });
+  console.log(`There are ${videos.length} videos.`);
+  return new Promise(async (resolve, reject) => {
+    for (let i = 0; i < videos.length; i++) {
+      try {
+        await Video.create(videos[i]);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    resolve(true);
   });
 };
 
-/**
- * Create videos for a specific game.
- * @param {object} game The game the videos belong to.
- * @param {array} list The list containing the videos.
- */
-const createSubVideos = (game, list) => {
-  return new Promise((resolve, reject) => {
-    Game.findOne({ where: { name: game } })
-      .then((gameObj) => {
-        list.forEach((s) => {
-          Video.create({ video_id: s.video_id })
-            .then((obj) => {
-              obj
-                .setGame(gameObj)
-                .then(() => resolve(true))
-                .catch(reject(false));
-            })
-            .catch(() => reject(false));
+const connectScreenshotToGame = (games) => {
+  const list = _.flatten(
+    _.map(
+      _.filter(
+        _.map(
+          _.filter(games, (game) => game.screenshots !== undefined && game.screenshots.length > 0),
+          (game) => {
+            return { game: game.name, screenshots: game.screenshots };
+          }
+        ),
+        (item) => item.screenshots !== undefined && item.screenshots.length > 0
+      ),
+      (item) => {
+        return _.map(item.screenshots, (s) => {
+          return { game: item.game, screenshot_id: s.image_id };
         });
-      })
-      .catch((err) => console.log(err));
+      }
+    )
+  );
+
+  return new Promise(async (resolve, reject) => {
+    let count = 0;
+    const screenshotObjs = await Screenshot.findAll();
+    for (let i = 0; i < screenshotObjs.length; i++) {
+      const screenshot = screenshotObjs[i];
+      const game = _.filter(list, (g) => g.screenshot_id === screenshot.screenshot_id)[0];
+      if (game) {
+        try {
+          const gameObj = await Game.findOne({ where: { name: game.game } });
+          if (gameObj) {
+            try {
+              screenshot.setGame(gameObj);
+              count = count + 1;
+              console.log(i, count);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    resolve(count);
   });
 };
 
-/**
- * Connect both game to gamemode.
- * @param {array} games The array containing all games and their corresponding gamemodes.
- */
-const connectGametoGameMode = (games) => {
-  const list = _.filter(
-    _.map(games, ({ name, game_modes }) => {
-      return { name: name, game_modes: game_modes };
-    }),
-    (item) => item.game_modes !== undefined
+const connectVideoToGame = (games) => {
+  const list = _.flatten(
+    _.map(
+      _.filter(
+        _.map(
+          _.filter(games, (game) => game.videos !== undefined && game.videos.length > 0),
+          (game) => {
+            const videos = _.filter(game.videos, (v) => v.name === 'Trailer');
+            return { game: game.name, videos: videos };
+          }
+        ),
+        (item) => item.videos !== undefined && item.videos.length > 0
+      ),
+      (item) => {
+        return _.map(item.videos, (v) => {
+          return { game: item.game, video_id: v.video_id };
+        });
+      }
+    )
   );
 
-  return new Promise((resolve, reject) => {
-    list.forEach(({ name, game_modes }) => {
-      Game.findOne({ where: { name: name } })
-        .then((gameObj) => {
-          game_modes.forEach((mode) => {
-            GameMode.findOne({ where: { name: mode.name } })
-              .then((gameModeObj) => {
-                gameModeObj.addGame(gameObj);
-                resolve(true);
-              })
-              .catch((err) => reject(err));
-          });
-        })
-        .catch((err) => reject(err));
-    });
+  return new Promise(async (resolve, reject) => {
+    let count = 0;
+    const videoObjs = await Video.findAll();
+    for (let i = 0; i < videoObjs.length; i++) {
+      const video = videoObjs[i];
+      const game = _.filter(list, (g) => g.video_id === video.video_id)[0];
+      if (game) {
+        try {
+          const gameObj = await Game.findOne({ where: { name: game.game } });
+          if (gameObj) {
+            try {
+              video.setGame(gameObj);
+              count = count + 1;
+              console.log(i, count);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    resolve(count);
   });
 };
 
-/**
- * Connect both game to genre.
- * @param {array} games The array containing all games and their corresponding genres.
- */
-const connectGametoGenre = (games) => {
-  const list = _.filter(
-    _.map(games, ({ name, genres }) => {
-      return { name: name, genres: genres };
-    }),
-    (item) => item.genres !== undefined
+const connectGamemodeToGame = (games) => {
+  const list = _.flatten(
+    _.map(
+      _.map(
+        _.filter(games, (game) => game.game_modes !== undefined && game.game_modes.length > 0),
+        (game) => {
+          return { game: game.name, gamemodes: game.game_modes };
+        }
+      ),
+      (item) => {
+        return _.map(item.gamemodes, (gm) => {
+          return { game: item.game, game_mode_name: gm.name };
+        });
+      }
+    )
   );
 
-  return new Promise((resolve, reject) => {
-    list.forEach(({ name, genres }) => {
-      Game.findOne({ where: { name: name } })
-        .then((gameObj) => {
-          genres.forEach((genre) => {
-            Genre.findOne({ where: { name: genre.name } })
-              .then((genreObj) => {
-                gameObj.addGenre(genreObj);
-                resolve(true);
-              })
-              .catch((err) => reject(err));
-          });
-        })
-        .catch((err) => reject(err));
-    });
+  return new Promise(async (resolve, reject) => {
+    const gamemodeObjs = await Gamemode.findAll();
+    const gameObjs = await Game.findAll();
+
+    let count = 0;
+    for (let i = 0; i < list.length; i++) {
+      const record = list[i];
+      const gameObj = _.filter(gameObjs, (game) => game.name === record.game)[0];
+      const gamemodeObj = _.filter(gamemodeObjs, (gamemode) => gamemode.name === record.game_mode_name)[0];
+
+      if (gameObj && gamemodeObj) {
+        try {
+          await gameObj.addGamemode(gamemodeObj);
+          count = count + 1;
+          console.log(i, count);
+        } catch (e) {
+          console.log(e);
+        }
+      } else console.error('Game or Gamemode not found.');
+    }
+    resolve(count);
   });
 };
 
-/**
- * Connect both game to platform.
- * @param {array} games The array containing all games and their corresponding platforms.
- */
-const connectGametoPlatform = (games) => {
-  const list = _.filter(
-    _.map(games, ({ name, platforms }) => {
-      return { name: name, platforms: platforms };
-    }),
-    (item) => item.platforms !== undefined
+const connectGenreToGame = (games) => {
+  const list = _.flatten(
+    _.map(
+      _.map(
+        _.filter(games, (game) => game.genres !== undefined && game.genres.length > 0),
+        (game) => {
+          return { game: game.name, genres: game.genres };
+        }
+      ),
+      (item) => {
+        return _.map(item.genres, (g) => {
+          return { game: item.game, genre_name: g.name };
+        });
+      }
+    )
   );
 
-  return new Promise((resolve, reject) => {
-    list.forEach(({ name, platforms }) => {
-      Game.findOne({ where: { name: name } })
-        .then((gameObj) => {
-          platforms.forEach((platform) => {
-            Platform.findOne({ where: { name: platform.name } })
-              .then((platformObj) => {
-                platformObj.addGame(gameObj);
-                resolve(true);
-              })
-              .catch((err) => reject(err));
+  return new Promise(async (resolve, reject) => {
+    const genreObjs = await Genre.findAll();
+    const gameObjs = await Game.findAll();
+
+    console.log(genreObjs);
+
+    let count = 0;
+    for (let i = 0; i < list.length; i++) {
+      const record = list[i];
+      const gameObj = _.filter(gameObjs, (game) => game.name === record.game)[0];
+      const genreObj = _.filter(genreObjs, (genre) => genre.name === record.genre_name)[0];
+
+      if (gameObj && genreObj) {
+        try {
+          await gameObj.addGenre(genreObj);
+          count = count + 1;
+          console.log(i, count);
+        } catch (e) {
+          console.log(e);
+        }
+      } else console.error('Game or Genre not found.');
+    }
+    resolve(count);
+  });
+};
+
+const connectPlatformToGame = (games) => {
+  const platforms = ['PC (Microsoft Windows)', 'Linux', 'Mac'];
+  const list = _.filter(
+    _.flatten(
+      _.map(
+        _.map(
+          _.filter(games, (game) => game.platforms !== undefined && game.platforms.length > 0),
+          (game) => {
+            return { game: game.name, platforms: game.platforms };
+          }
+        ),
+        (item) => {
+          return _.map(item.platforms, (p) => {
+            return { game: item.game, platform_name: p.name };
           });
-        })
-        .catch((err) => reject(err));
-    });
+        }
+      )
+    ),
+    (item) => platforms.includes(item.platform_name)
+  );
+
+  return new Promise(async (resolve, reject) => {
+    const platformObjs = await Platform.findAll();
+    const gameObjs = await Game.findAll();
+
+    let count = 0;
+    for (let i = 0; i < list.length; i++) {
+      const record = list[i];
+      const gameObj = _.filter(gameObjs, (game) => game.name === record.game)[0];
+      const platformObj = _.filter(platformObjs, (platform) => platform.name === record.platform_name)[0];
+
+      if (gameObj && platformObj) {
+        try {
+          await gameObj.addPlatform(platformObj);
+          count = count + 1;
+          console.log(i, count);
+        } catch (e) {
+          console.log(e);
+        }
+      } else console.error('Game or Platform not found.');
+    }
+    resolve(count);
   });
 };
 

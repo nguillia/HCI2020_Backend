@@ -1,20 +1,19 @@
 const Sequelize = require('sequelize');
-const { sequelize, Game, Genre } = require('../init');
+const { sequelize, Game, Genre, Platform, Gamemode } = require('../init');
+const _ = require('lodash');
 
-const getGames = () => {
-  return new Promise((resolve, reject) => {
-    Game.findAll({ include: [{ model: Genre, include: [{ association: 'Genre_Game' }] }] })
-      .then((games) => resolve(games))
-      .catch((err) => reject(err));
-
-    // Game.findOne({ where: { id: 31 } })
-    //   .then((game) => {
-    //     game
-    //       .getGenres()
-    //       .then((g) => console.log('Genre', g))
-    //       .catch((err) => console.log(err));
-    //   })
-    //   .catch((err) => console.log(err));
+const getGames = ({ limit }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findAll({
+          ...(limit && { limit }),
+          include: [{ model: Genre }, { model: Platform }, { model: Gamemode }],
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 

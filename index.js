@@ -39,15 +39,16 @@ app.use(bodyParser.json());
 require('./routes/routes')(app);
 
 /* FUNCTIONS */
-database.init();
+database
+  .init()
+  .then((r) => {
+    console.log(r);
+    require('./database/relations');
 
-const gamePuller = require('./services/gamepuller');
-gamePuller.pullGames();
-
-const { getGames } = require('./database/utils/games');
-getGames()
-  .then((r) => console.log(r))
-  .catch((err) => console.log(err));
+    /* DO ALL DB RELATED STUFF HERE*/
+    // require('./services/gamepuller').pullGames();
+  })
+  .catch((err) => console.error(err));
 
 /* LISTEN */
 app.listen(port, () => console.log(`Server up and running on port ${port}.`));
