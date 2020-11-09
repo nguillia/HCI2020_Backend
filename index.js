@@ -46,7 +46,7 @@ database
     require('./database/relations');
 
     /* DO ALL DB RELATED STUFF HERE*/
-    // require('./services/gamepuller').pullGames();
+    require('./services/gamepuller').pullGames();
   })
   .catch((err) => console.error(err));
 

@@ -44,5 +44,5 @@ module.exports.Screenshot = sequelize.define(
   ScreenshotSchema.options
 );
 module.exports.Video = sequelize.define(VideoSchema.name, VideoSchema.attributes, VideoSchema.options);
-module.exports.User  = sequelize.define(UserSchema.name, UserSchema.attributes, UserSchema.options);
-module.exports.User_Likedgames = sequelize.define("User_Likedgames");
+module.exports.User = sequelize.define(UserSchema.name, UserSchema.attributes, UserSchema.options);
+module.exports.User_Likedgames = sequelize.define('User_Likedgames');

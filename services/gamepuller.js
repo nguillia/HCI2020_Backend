@@ -3,12 +3,11 @@ const axios = require('axios');
 const fs = require('fs');
 
 const { Platform, Screenshot, Gamemode, Game, Video, Genre } = require('../database/init');
-const { resolve } = require('path');
 
 /**
  * Populate the database and parse the game data.
  */
-const pullGames = () => {
+const pullGames = async () => {
   const i = 0;
   const amount = 33681;
   // const amount = 10;
@@ -57,6 +56,32 @@ const pullGames = () => {
   // connectPlatformToGame(games)
   //   .then((i) => console.log(`${i} Game-Platform relations added.`))
   //   .catch((err) => console.log(err));
+};
+
+const gameUpdater = (games) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const pulledGames = await Game.findAll();
+      for (let i = 0; i < pulledGames.length; i++) {
+        const gameObj = pulledGames[i];
+        const game = _.filter(games, (g) => g.name === gameObj.name)[0];
+        if (game) {
+          try {
+            await Game.update(
+              { first_release_date: new Date(game.first_release_date * 1000), summary: game.summary },
+              { where: { name: game.name } }
+            );
+            console.log(i);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+      resolve(true);
+    } catch (err) {
+      reject(err);
+    }
+  });
 };
 
 const amountChecker = (games) => {
