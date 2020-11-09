@@ -21,8 +21,8 @@ Game.hasMany(Video);
 Video.belongsTo(Game);
 
 // User-Game M:N
-User.belongsToMany(Game, { through: 'User_Likedgames' });
-Game.belongsToMany(User, { through: 'User_Likedgames' });
+User.belongsToMany(Game, { through: 'User_Likedgame' });
+Game.belongsToMany(User, { through: 'User_Likedgame' });
 
 console.log('DB Relations added.');
 

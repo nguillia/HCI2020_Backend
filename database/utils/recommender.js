@@ -1,17 +1,22 @@
 const Sequelize = require('sequelize');
-const { sequelize, Game, Genre, User_Likedgames, Gamemode } = require('../init');
+const { Game_Genre, User_Likedgame , User} = require('../init');
 const _ = require('lodash');
 
 const getRecommendations = ({ iUserId }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const likedGames = await User_Likedgames.findAll( {
+      const user = await User.findOne( {
         where: {
-          userId: iUserId
-        }
+          id: iUserId
+        },
       })  
-      console.log(likedGames);
-      resolve(likedGames);
+      const likedGames = await user.getGames();
+      const likedGenresPromise = async () => {
+        return Promise.all(likedGames.map(g => g.getGenres()));
+      }
+      likedGenresPromise().then(data => {
+        resolve(data);
+      })
     }catch (error) {
       reject(error);
     }
