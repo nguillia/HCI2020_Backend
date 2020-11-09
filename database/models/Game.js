@@ -28,7 +28,7 @@ const Game = {
       defaultValue: 0,
     },
     summary: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false,
     },
     cover_id: {
