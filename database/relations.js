@@ -1,4 +1,4 @@
-const { sequelize, Game, Video, Screenshot, Gamemode, Genre, Platform } = require('./init');
+const { sequelize, Game, Video, Screenshot, Gamemode, Genre, Platform, User } = require('./init');
 
 // Game-Genre M:N
 Game.belongsToMany(Genre, { through: 'Game_Genre' });
@@ -20,8 +20,12 @@ Gamemode.belongsToMany(Game, { through: 'Game_Gamemode' });
 Game.hasMany(Video);
 Video.belongsTo(Game);
 
+// User-Game M:N
+User.belongsToMany(Game, { through: 'User_Likedgames' });
+Game.belongsToMany(User, { through: 'User_Likedgames' });
+
 console.log('DB Relations added.');
 
 // Sync
-// sequelize.sync();
-// console.log('DB Synced.');
+//sequelize.sync();
+//console.log('DB Synced.');
