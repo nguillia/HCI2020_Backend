@@ -24,8 +24,12 @@ Video.belongsTo(Game);
 User.belongsToMany(Game, { through: 'User_Likedgame' });
 Game.belongsToMany(User, { through: 'User_Likedgame' });
 
+// User-Genre M:N
+User.belongsToMany(Genre, { through: 'User_Genre' });
+Genre.belongsToMany(User, { through: 'User_Genre' });
+
 console.log('DB Relations added.');
 
 // Sync
-//sequelize.sync();
-//console.log('DB Synced.');
+// sequelize.sync();
+// console.log('DB Synced.');
