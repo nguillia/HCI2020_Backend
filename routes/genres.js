@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { handleResponse } = require('../services/utils');
-const { getGenres } = require('../database/utils/genre');
+const { getGenres } = require('../database/utils/genres');
 const { check } = require('express-validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 

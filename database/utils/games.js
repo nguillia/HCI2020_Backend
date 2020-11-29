@@ -17,4 +17,14 @@ const getGames = ({ limit }) => {
   });
 };
 
-module.exports = { getGames };
+const getGamesWithIds = ({ ids }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(await Game.findAll({ where: { id: { [Sequelize.Op.or]: ids } } }));
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+module.exports = { getGames, getGamesWithIds };
