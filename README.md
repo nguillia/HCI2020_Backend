@@ -6,6 +6,8 @@
 
 ### Users
 
+#### GET
+
 | Endpoint                     | Type | Parameters                                             | Description                                                             |
 | ---------------------------- | ---- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
 | **api/users/user**           | POST | **id**[Int]: User id                                   | Get user specific information (eg. id, liked games, (dis)liked genres). |
