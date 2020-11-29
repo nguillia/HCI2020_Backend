@@ -2,9 +2,13 @@
 
 ## Endpoints
 
-### Games
+### Users
 
-All endpoints related to games are listed below.
+| Endpoint           | Type | Parameters      | Description                                                             |
+| ------------------ | ---- | --------------- | ----------------------------------------------------------------------- |
+| **api/users/user** | POST | **id**: User id | Get user specific information (eg. id, liked games, (dis)liked genres). |
+
+### Games
 
 | Endpoint       | Type | Parameters                               | Description         |
 | -------------- | ---- | ---------------------------------------- | ------------------- |
@@ -12,8 +16,6 @@ All endpoints related to games are listed below.
 | **api/games/** | POST | **limit**: max amount of games to return | List all the games. |
 
 ### Genres
-
-All endpoints related to genres are listed below.
 
 | Endpoint       | Type | Parameters | Description          |
 | -------------- | ---- | ---------- | -------------------- |

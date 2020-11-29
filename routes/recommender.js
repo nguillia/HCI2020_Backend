@@ -4,7 +4,7 @@ const { getRecommendations } = require('../database/utils/recommender');
 
 router.post('/recommend', async (req, res) => {
   // Insert magic recommender function here.
-  return handleResponse(req, res, 200, { success: true, data: await getRecommendations({iUserId: 1}) });
+  return handleResponse(req, res, 200, { success: true, data: await getRecommendations({ iUserId: 1 }) });
 });
 
 module.exports = router;
