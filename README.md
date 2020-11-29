@@ -22,9 +22,9 @@
 
 ### Genres
 
-| Endpoint       | Type | Parameters | Description          |
-| -------------- | ---- | ---------- | -------------------- |
-| **api/games/** | GET  |            | List all the genres. |
+| Endpoint        | Type | Parameters | Description          |
+| --------------- | ---- | ---------- | -------------------- |
+| **api/genres/** | GET  |            | List all the genres. |
 
 ### Recommender
 
