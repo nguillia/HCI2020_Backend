@@ -4,7 +4,7 @@ const { getGames } = require('../database/utils/games');
 const { check } = require('express-validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 
-router.get('/list', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     return handleResponse(req, res, 200, { success: true, data: await getGames({ limit: 10 }) });
   } catch (err) {
@@ -12,7 +12,7 @@ router.get('/list', async (req, res) => {
   }
 });
 
-router.post('/list', [check('limit').optional().toInt().isInt(), validationMiddleware], async (req, res) => {
+router.post('/', [check('limit').optional().toInt().isInt(), validationMiddleware], async (req, res) => {
   try {
     return handleResponse(req, res, 200, {
       success: true,
