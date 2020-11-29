@@ -12,10 +12,10 @@
 
 ### Games
 
-| Endpoint       | Type | Parameters                                    | Description         |
-| -------------- | ---- | --------------------------------------------- | ------------------- |
-| **api/games/** | GET  |                                               | List all the games. |
-| **api/games/** | POST | **limit**[Int]: max amount of games to return | List all the games. |
+| Endpoint       | Type | Parameters                                    | Description             |
+| -------------- | ---- | --------------------------------------------- | ----------------------- |
+| **api/games/** | GET  |                                               | List all the games.     |
+| **api/games/** | POST | **limit**[Int]: max amount of games to return | List the first x games. |
 
 ### Genres
 
