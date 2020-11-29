@@ -7,8 +7,8 @@
 | Endpoint                  | Type | Parameters                                             | Description                                                             |
 | ------------------------- | ---- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
 | **api/users/user**        | POST | **id**[Int]: User id                                   | Get user specific information (eg. id, liked games, (dis)liked genres). |
-| **api/users/like_genres** | POST | **id**[Int]: User id<br/>**genres**[Array]: Genres IDs | Like specified genres.                                                  |
-| **api/users/like_games**  | POST | **id**[Int]: User id<br/>**games**[Array]: Games IDs   | Like specified games.                                                   |
+| **api/users/like_genres** | POST | **id**[Int]: User id<br/>**genres**[Array]: Genres IDs | Let the user like the specified genres.                                 |
+| **api/users/like_games**  | POST | **id**[Int]: User id<br/>**games**[Array]: Games IDs   | Let the user like the specified games.                                  |
 
 ### Games
 
