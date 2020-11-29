@@ -4,7 +4,6 @@
 
 ### Genres
 
-| Syntax          | Description          |
-| --------------- | -------------------- |
 | Endpoint        | Description          |
+| --------------- | -------------------- |
 | **api/genres/** | List all the genres. |
