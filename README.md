@@ -8,12 +8,12 @@
 
 #### POST Requests
 
-| Endpoint                  | Parameters                                             | Description                                                             |
-| ------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------- |
-| **/users/user**           | **id**[Int]: User id                                   | Get user specific information (eg. id, liked games, (dis)liked genres). |
-| **/users/like_genres**    | **id**[Int]: User id<br/>**genres**[Array]: Genres IDs | Let the user like the specified genres.                                 |
-| **/users/dislike_genres** | **id**[Int]: User id<br/>**genres**[Array]: Genres IDs | Let the user dislike the specified genres.                              |
-| **/users/like_games**     | **id**[Int]: User id<br/>**games**[Array]: Games IDs   | Let the user like the specified games.                                  |
+| Endpoint                  | Parameters                                                | Description                                                             |
+| ------------------------- | --------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **/users/user**           | **id**[Int]: User id                                      | Get user specific information (eg. id, liked games, (dis)liked genres). |
+| **/users/like_genres**    | -**id**[Int]: User id<br/> -**genres**[Array]: Genres IDs | Let the user like the specified genres.                                 |
+| **/users/dislike_genres** | **id**[Int]: User id<br/>**genres**[Array]: Genres IDs    | Let the user dislike the specified genres.                              |
+| **/users/like_games**     | **id**[Int]: User id<br/>**games**[Array]: Games IDs      | Let the user like the specified games.                                  |
 
 ### Games
 
