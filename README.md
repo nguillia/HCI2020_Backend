@@ -4,4 +4,5 @@
 
 ### Genres
 
-**/api/genres/**: List all the genres in the database.
+| Endpoint | Description |
+| **/api/genres/** | List all the genres in the database. |
