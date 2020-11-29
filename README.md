@@ -25,3 +25,11 @@
 | Endpoint       | Type | Parameters | Description          |
 | -------------- | ---- | ---------- | -------------------- |
 | **api/games/** | GET  |            | List all the genres. |
+
+### Recommender
+
+No endpoints implemented yet.
+
+<!-- | Endpoint       | Type | Parameters | Description          |
+| -------------- | ---- | ---------- | -------------------- |
+| **api/games/** | GET  |            | List all the genres. | -->
