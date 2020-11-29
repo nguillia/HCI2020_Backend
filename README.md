@@ -4,11 +4,11 @@
 
 ### Users
 
-| Endpoint                  | Type | Parameters                                     | Description                                                             |
-| ------------------------- | ---- | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| **api/users/user**        | POST | **id**: User id                                | Get user specific information (eg. id, liked games, (dis)liked genres). |
-| **api/users/like_genres** | POST | **id**: User id<br/>**genres**: Genres ID list | Like specified genres.                                                  |
-| **api/users/like_games**  | POST | **id**: User id<br/>**games**: Games ID list   | Like specified games.                                                   |
+| Endpoint                  | Type | Parameters                                       | Description                                                             |
+| ------------------------- | ---- | ------------------------------------------------ | ----------------------------------------------------------------------- |
+| **api/users/user**        | POST | **id**[int]: User id                             | Get user specific information (eg. id, liked games, (dis)liked genres). |
+| **api/users/like_genres** | POST | **id**: User id<br/>**genres**: Genres IDs array | Like specified genres.                                                  |
+| **api/users/like_games**  | POST | **id**: User id<br/>**games**: Games IDs array   | Like specified games.                                                   |
 
 ### Games
 
