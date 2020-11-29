@@ -25,9 +25,9 @@
 
 #### POST Requests
 
-| Endpoint    | Parameters                                     | Description             |
-| ----------- | ---------------------------------------------- | ----------------------- |
-| **/games/** | **limit**[Int] : max amount of games to return | List the first x games. |
+| Endpoint    | Parameters                                          | Description             |
+| ----------- | --------------------------------------------------- | ----------------------- |
+| **/games/** | **limit**[Int] : <br/>max amount of games to return | List the first x games. |
 
 ### Genres
 
