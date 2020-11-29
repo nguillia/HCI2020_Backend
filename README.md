@@ -2,6 +2,8 @@
 
 ## Endpoints
 
+**Main endpoint**: https://hci2020.herokuapp.com/
+
 ### Users
 
 | Endpoint                     | Type | Parameters                                             | Description                                                             |
