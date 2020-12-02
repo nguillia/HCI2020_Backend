@@ -2,11 +2,12 @@ require('dotenv').config();
 
 /* NPM PACKAGES */
 const express = require('express');
+const bodyParser = require('body-parser');
 const compression = require('compression');
 const helmet = require('helmet');
 const https = require('https');
-const bodyParser = require('body-parser');
 const cors = require('cors');
+
 /* END NPM PACKAGES */
 
 /* CUSTOM PACKAGES */
@@ -28,11 +29,11 @@ const port = process.env.PORT || 3001;
 
 /* MIDDLEWARE */
 app.options('*', cors());
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(helmet());
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 /* END MIDDLEWARE */
 
 /* ROUTES */

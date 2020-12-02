@@ -1,12 +1,9 @@
 const router = require('express').Router();
 const { handleResponse } = require('../services/utils');
-const { getUserInfo, dislikeGenres, likeDislikeGames } = require('../database/utils/users');
-const { getGenres } = require('../database/utils/genres');
-const { getGamesWithIds } = require('../database/utils/games');
+const { getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink } = require('../database/utils/users');
+const { isValidArray, toIntegerArray } = require('../middleware/validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
-const { Game } = require('../database/init');
 const { check } = require('express-validator');
-const _ = require('lodash');
 
 router.post('/user', [check('id').toInt().isInt().not().isEmpty(), validationMiddleware], async (req, res) => {
   try {
@@ -20,13 +17,18 @@ router.post('/user', [check('id').toInt().isInt().not().isEmpty(), validationMid
 
 router.post(
   '/dislike_genres',
-  [check('id').toInt().isInt().not().isEmpty(), check('genres').not().isEmpty(), validationMiddleware],
+  [
+    check('id').toInt().isInt().not().isEmpty(),
+    check('genres')
+      .custom((value) => isValidArray(value))
+      .customSanitizer((value) => toIntegerArray(value)),
+    validationMiddleware,
+  ],
   async (req, res) => {
     try {
-      if (req.body.genres.length < 1) return handleResponse(req, res, 400, {}, 'No Genres array passed.');
       return handleResponse(req, res, 200, {
         success: true,
-        data: { genres: await dislikeGenres({ userId: req.body.id, genres: req.body.genres }) },
+        data: { genres: await updateGenres({ userId: req.body.id, genreIds: req.body.genres }) },
       });
     } catch (err) {
       console.log(err);
@@ -37,13 +39,19 @@ router.post(
 
 router.post(
   '/dislike_games',
-  [check('id').toInt().isInt().not().isEmpty(), check('games').not().isEmpty(), validationMiddleware],
+  [
+    check('id').toInt().isInt().not().isEmpty(),
+    check('games')
+      .custom((value) => isValidArray(value))
+      .customSanitizer((value) => toIntegerArray(value)),
+    validationMiddleware,
+  ],
   async (req, res) => {
     try {
       if (req.body.games.length < 1) return handleResponse(req, res, 400, {}, 'No Games array passed.');
       return handleResponse(req, res, 200, {
         success: true,
-        data: { games: await likeDislikeGames({ userId: req.body.id, games: req.body.games, like: 0 }) },
+        data: { games: await likeDislikeGames({ userId: req.body.id, gameIds: req.body.games, like: 0 }) },
       });
     } catch (err) {
       console.log(err);
@@ -54,13 +62,42 @@ router.post(
 
 router.post(
   '/like_games',
-  [check('id').toInt().isInt().not().isEmpty(), check('games').not().isEmpty(), validationMiddleware],
+  [
+    check('id').toInt().isInt().not().isEmpty(),
+    check('games')
+      .custom((value) => isValidArray(value))
+      .customSanitizer((value) => toIntegerArray(value)),
+    validationMiddleware,
+  ],
   async (req, res) => {
     try {
       if (req.body.games.length < 1) return handleResponse(req, res, 400, {}, 'No Games array passed.');
       return handleResponse(req, res, 200, {
         success: true,
-        data: { games: await likeDislikeGames({ userId: req.body.id, games: req.body.games, like: 1 }) },
+        data: { games: await likeDislikeGames({ userId: req.body.id, gameIds: req.body.games, like: 1 }) },
+      });
+    } catch (err) {
+      console.log(err);
+      return handleResponse(req, res, 400, {}, err);
+    }
+  }
+);
+
+router.post(
+  '/remove_games',
+  [
+    check('id').toInt().isInt().not().isEmpty(),
+    check('games')
+      .custom((value) => isValidArray(value))
+      .customSanitizer((value) => toIntegerArray(value)),
+    validationMiddleware,
+  ],
+  async (req, res) => {
+    try {
+      if (req.body.games.length < 1) return handleResponse(req, res, 400, {}, 'No Games array passed.');
+      return handleResponse(req, res, 200, {
+        success: true,
+        data: { games: await removeUserGamesLink({ userId: req.body.id, gameIds: req.body.games }) },
       });
     } catch (err) {
       console.log(err);
