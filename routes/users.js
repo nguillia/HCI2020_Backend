@@ -16,7 +16,7 @@ router.post('/user', [check('id').toInt().isInt().not().isEmpty(), validationMid
 });
 
 router.post(
-  '/dislike_genres',
+  '/user/dislike_genres',
   [
     check('id').toInt().isInt().not().isEmpty(),
     check('genres')
@@ -38,7 +38,7 @@ router.post(
 );
 
 router.post(
-  '/dislike_games',
+  '/user/dislike_games',
   [
     check('id').toInt().isInt().not().isEmpty(),
     check('games')
@@ -61,7 +61,7 @@ router.post(
 );
 
 router.post(
-  '/like_games',
+  '/user/like_games',
   [
     check('id').toInt().isInt().not().isEmpty(),
     check('games')
@@ -84,7 +84,7 @@ router.post(
 );
 
 router.post(
-  '/remove_games',
+  '/user/remove_games',
   [
     check('id').toInt().isInt().not().isEmpty(),
     check('games')
