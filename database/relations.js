@@ -21,8 +21,8 @@ Game.hasMany(Video);
 Video.belongsTo(Game);
 
 // User-Game M:N
-User.belongsToMany(Game, { through: 'User_Likedgame' });
-Game.belongsToMany(User, { through: 'User_Likedgame' });
+User.belongsToMany(Game, { through: 'User_Game' });
+Game.belongsToMany(User, { through: 'User_Game' });
 
 // User-Genre M:N
 User.belongsToMany(Genre, { through: 'User_Genre' });

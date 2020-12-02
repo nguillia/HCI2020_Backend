@@ -45,6 +45,6 @@ module.exports.Screenshot = sequelize.define(
 );
 module.exports.Video = sequelize.define(VideoSchema.name, VideoSchema.attributes, VideoSchema.options);
 module.exports.User = sequelize.define(UserSchema.name, UserSchema.attributes, UserSchema.options);
-module.exports.User_Likedgame = sequelize.define('User_Likedgame');
-module.exports.User_Genre = sequelize.define('User_Genre', { liked: Sequelize.BOOLEAN });
+module.exports.User_Likedgame = sequelize.define('User_Game', { liked: Sequelize.BOOLEAN });
+module.exports.User_Genre = sequelize.define('User_Genre');
 //module.exports.Game_Genre = sequelize.define('Game_Genre');

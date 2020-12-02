@@ -8,12 +8,12 @@
 
 #### POST Requests
 
-| Endpoint                  | Parameters                                                                           | Description                                                             |
-| ------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| **/users/user**           | **id**[Int]<br/>&nbsp;&nbsp;User id                                                  | Get user specific information (eg. id, liked games, (dis)liked genres). |
-| **/users/like_genres**    | **id**[Int]<br/>&nbsp;&nbsp;User id<br/>**genres**[Array]<br/>&nbsp;&nbsp;Genres IDs | Let the user like the specified genres.                                 |
-| **/users/dislike_genres** | **id**[Int]&nbsp;&nbsp;User id<br/>**genres**[Array]&nbsp;&nbsp;Genre IDs            | Let the user dislike the specified genres.                              |
-| **/users/like_games**     | **id**[Int]&nbsp;&nbsp;User id<br/>**games**[Array]&nbsp;&nbsp;Game IDs              | Let the user like the specified games.                                  |
+| Endpoint                  | Parameters                                                                           | Description                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| **/users/user**           | **id**[Int]<br/>&nbsp;&nbsp;User id                                                  | Get user specific information (eg. id, (dis)liked games, disliked genres). |
+| **/users/dislike_genres** | **id**[Int]<br/>&nbsp;&nbsp;User id<br/>**genres**[Array]<br/>&nbsp;&nbsp;Genres IDs | Let the user dislike the genres with specified ID.                         |
+| **/users/dislike_games**  | **id**[Int]&nbsp;&nbsp;User id<br/>**genres**[Array]&nbsp;&nbsp;Genre IDs            | Let the user dislike the games with specified ID.                          |
+| **/users/like_games**     | **id**[Int]&nbsp;&nbsp;User id<br/>**games**[Array]&nbsp;&nbsp;Game IDs              | Let the user like the games with specified ID.                             |
 
 ### Games
 
