@@ -9,7 +9,7 @@
 #### POST Requests
 
 | Endpoint                       | Parameters                                                                           | Description                                                                            |
-| :----------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| :----------------------------- | ------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------- |
 | **/users/user**                | **id**[Int]<br/>&nbsp;&nbsp;User id                                                  | Get user specific information (eg. id, liked and disliked games, and disliked genres). |
 | **/users/user/dislike_genres** | **id**[Int]<br/>&nbsp;&nbsp;User id<br/>**genres**[Array]<br/>&nbsp;&nbsp;Genres IDs | Let the user dislike the genres with specified ID, all other genres will be "liked".   |
 | **/users/user/dislike_games**  | **id**[Int]<br/>&nbsp;&nbsp;User id<br/>**genres**[Array]<br/>&nbsp;&nbsp;Genre IDs  | Let the user dislike the games with specified ID.                                      |
@@ -21,13 +21,13 @@
 #### GET Requests
 
 | Endpoint    | Description         |
-| ----------- | ------------------- |
+| :---------- | :------------------ |
 | **/games/** | List all the games. |
 
 #### POST Requests
 
 | Endpoint    | Parameters                                                   | Description             |
-| ----------- | ------------------------------------------------------------ | ----------------------- |
+| :---------- | ------------------------------------------------------------ | :---------------------- |
 | **/games/** | **limit**[Int]<br/>&nbsp;&nbsp;Max amount of games to return | List the first x games. |
 
 ### Genres
@@ -35,7 +35,7 @@
 #### GET Requests
 
 | Endpoint     | Description          |
-| ------------ | -------------------- |
+| :----------- | :------------------- |
 | **/genres/** | List all the genres. |
 
 ### Recommender
@@ -43,5 +43,5 @@
 #### POST Requests
 
 | Endpoint                      | Parameters                          | Description                                                              |
-| ----------------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+| :---------------------------- | ----------------------------------- | :----------------------------------------------------------------------- |
 | **api/recommender/recommend** | **id**[Int]<br/>&nbsp;&nbsp;User id | Recommend ten new games, games that the user has not yet liked/disliked. |
