@@ -3,13 +3,26 @@ const { sequelize, User, Game, Genre } = require('../init');
 const { getGenres } = require('../utils/genres');
 const { getGamesWithIds } = require('../utils/games');
 const _ = require('lodash');
-const { reject } = require('lodash');
+
+const getUser = ({ id }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(await User.findOne({ where: { id: id }, attributes: ['id', 'username'] }));
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
 
 const getUserInfo = ({ id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       resolve(
-        await User.findOne({ where: { id: id }, attributes: ['id'], include: [{ model: Game }, { model: Genre }] })
+        await User.findOne({
+          where: { id: id },
+          attributes: ['id', 'username'],
+          include: [{ model: Game }, { model: Genre }],
+        })
       );
     } catch (err) {
       reject(err);
@@ -17,14 +30,13 @@ const getUserInfo = ({ id }) => {
   });
 };
 
-const updateGenres = ({ userId, genreIds }) => {
+const updateGenres = ({ userObj, genreIds }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const output = { success: [], error: [] };
-      const userObj = await getUserInfo({ id: userId });
       const genresObj = await getGenres();
 
-      if (userObj && genresObj && genresObj.length > 0) {
+      if (genresObj && genresObj.length > 0) {
         genresObj.forEach((genreObj) => {
           console.log(genreObj.id);
           if (genreIds.includes(genreObj.id)) {
@@ -48,23 +60,22 @@ const updateGenres = ({ userId, genreIds }) => {
           }
         });
         resolve(output);
-      } else reject('User not found.');
+      } else reject('Genres not found.');
     } catch (err) {
       resolve(err);
     }
   });
 };
 
-const likeDislikeGames = ({ userId, gameIds, like }) => {
+const likeDislikeGames = ({ userObj, gameIds, like }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const output = { success: [], error: [] };
-      const userObj = await getUserInfo({ id: userId });
       const gamesObjs = await getGamesWithIds({
         ids: gameIds,
       });
 
-      if (userObj && gamesObjs && gamesObjs.length > 0) {
+      if (gamesObjs && gamesObjs.length > 0) {
         gameIds.forEach((gameId) => {
           const gameObj = _.filter(gamesObjs, (g) => {
             return g.id === gameId;
@@ -84,23 +95,22 @@ const likeDislikeGames = ({ userId, gameIds, like }) => {
 
         resolve(output);
       }
-      reject('User not found.');
+      reject('Games not found.');
     } catch (err) {
       reject(err);
     }
   });
 };
 
-const removeUserGamesLink = ({ userId, gameIds }) => {
+const removeUserGamesLink = ({ userObj, gameIds }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const output = { success: [], error: [] };
-      const userObj = await getUserInfo({ id: userId });
       const gamesObjs = await getGamesWithIds({
         ids: gameIds,
       });
 
-      if (userObj && gamesObjs && gamesObjs.length > 0) {
+      if (gamesObjs && gamesObjs.length > 0) {
         gameIds.forEach((gameId) => {
           const gameObj = _.filter(gamesObjs, (g) => {
             return g.id === gameId;
@@ -120,11 +130,11 @@ const removeUserGamesLink = ({ userId, gameIds }) => {
 
         resolve(output);
       }
-      reject('User not found.');
+      reject('Games not found.');
     } catch (err) {
       reject(err);
     }
   });
 };
 
-module.exports = { getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink };
+module.exports = { getUser, getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink };

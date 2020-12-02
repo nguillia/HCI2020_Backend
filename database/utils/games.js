@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const { sequelize, Game, Genre, Platform, Gamemode } = require('../init');
 const _ = require('lodash');
 
-const getGames = ({ limit }) => {
+const getGames = (limit) => {
   return new Promise(async (resolve, reject) => {
     try {
       resolve(
