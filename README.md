@@ -9,7 +9,7 @@
 #### POST Requests
 
 | Endpoint                       | Parameters                                                                           | Description                                                                            |
-| ------------------------------ | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| :----------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
 | **/users/user**                | **id**[Int]<br/>&nbsp;&nbsp;User id                                                  | Get user specific information (eg. id, liked and disliked games, and disliked genres). |
 | **/users/user/dislike_genres** | **id**[Int]<br/>&nbsp;&nbsp;User id<br/>**genres**[Array]<br/>&nbsp;&nbsp;Genres IDs | Let the user dislike the genres with specified ID, all other genres will be "liked".   |
 | **/users/user/dislike_games**  | **id**[Int]<br/>&nbsp;&nbsp;User id<br/>**genres**[Array]<br/>&nbsp;&nbsp;Genre IDs  | Let the user dislike the games with specified ID.                                      |

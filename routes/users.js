@@ -7,8 +7,8 @@ const { check } = require('express-validator');
 
 router.post('/user', [check('id').toInt().isInt().not().isEmpty(), validationMiddleware], async (req, res) => {
   try {
-    const user = await getUserInfo({ id: req.body.id });
-    if (user) return handleResponse(req, res, 200, { success: true, data: user });
+    if (user)
+      return handleResponse(req, res, 200, { success: true, data: { user: await getUserInfo({ id: req.body.id }) } });
     else return handleResponse(req, res, 400, {}, 'User not found.');
   } catch (err) {
     return handleResponse(req, res, 400, {}, err);
