@@ -4,6 +4,14 @@
 
 **Main endpoint**: https://hci2020.herokuapp.com/api
 
+### Authentication
+
+#### POST Requests
+
+| Endpoint        | Parameters                                                                                      | Description                                                        |
+| :-------------- | ----------------------------------------------------------------------------------------------- | :----------------------------------------------------------------- |
+| **/auth/login** | **username**[String]<br/>&nbsp;&nbsp;Username<br/>**password**[String]<br/>&nbsp;&nbsp;Password | Log the user in and require an authentication token. (not working) |
+
 ### Users
 
 #### POST Requests

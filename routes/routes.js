@@ -1,4 +1,5 @@
 module.exports = (app) => {
+  app.use('/api/auth', require('./authentication'));
   app.use('/api/games', require('./games'));
   app.use('/api/genres', require('./genres'));
   app.use('/api/users', require('./users'));

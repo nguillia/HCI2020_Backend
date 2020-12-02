@@ -14,6 +14,16 @@ const getUser = ({ id }) => {
   });
 };
 
+const getUserByUsername = ({ username }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(await User.findOne({ where: { username }, attributes: ['id', 'username', 'password'] }));
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 const getUserInfo = ({ id }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -137,4 +147,4 @@ const removeUserGamesLink = ({ userObj, gameIds }) => {
   });
 };
 
-module.exports = { getUser, getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink };
+module.exports = { getUser, getUserByUsername, getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink };

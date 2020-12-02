@@ -14,6 +14,7 @@ const getRecommendations = ({ userObj }) => {
         return !recommendedGameIds.includes(game.id);
       });
 
+      // Insert magic recommender function here
       resolve(_.slice(_.shuffle(newGamesObjs), 0, 10));
     } catch (error) {
       reject(error);

@@ -5,24 +5,37 @@ const { isUser, isValidArray, toIntegerArray } = require('../middleware/validato
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { check } = require('express-validator');
 
-router.post('/user', [check('id').toInt().isInt().not().isEmpty(), validationMiddleware], async (req, res) => {
-  try {
-    if (user)
-      return handleResponse(req, res, 200, { success: true, data: { user: await getUserInfo({ id: req.body.id }) } });
-    else return handleResponse(req, res, 400, {}, 'User not found.');
-  } catch (err) {
-    return handleResponse(req, res, 400, {}, err);
+router.post(
+  '/user',
+  [
+    check('id')
+      .exists()
+      .withMessage('Empty Field: id is required.')
+      .toInt()
+      .isInt()
+      .withMessage('Integer Error: id should be an integer value.'),
+    validationMiddleware,
+  ],
+  async (req, res) => {
+    try {
+      if (user)
+        return handleResponse(req, res, 200, { success: true, data: { user: await getUserInfo({ id: req.body.id }) } });
+      else return handleResponse(req, res, 400, {}, 'User not found.');
+    } catch (err) {
+      return handleResponse(req, res, 400, {}, err);
+    }
   }
-});
+);
 
 router.post(
   '/user/dislike_genres',
   [
     check('id')
+      .exists()
+      .withMessage('Empty Field: id is required.')
       .toInt()
       .isInt()
-      .not()
-      .isEmpty()
+      .withMessage('Integer Error: id should be an integer value.')
       .custom(async (value, { req }) => await isUser(value, req)),
     check('genres')
       .custom((value) => isValidArray(value))
@@ -46,10 +59,11 @@ router.post(
   '/user/dislike_games',
   [
     check('id')
+      .exists()
+      .withMessage('Empty Field: id is required.')
       .toInt()
       .isInt()
-      .not()
-      .isEmpty()
+      .withMessage('Integer Error: id should be an integer value.')
       .custom(async (value, { req }) => await isUser(value, req)),
     check('games')
       .custom((value) => isValidArray(value))
@@ -74,10 +88,11 @@ router.post(
   '/user/like_games',
   [
     check('id')
+      .exists()
+      .withMessage('Empty Field: id is required.')
       .toInt()
       .isInt()
-      .not()
-      .isEmpty()
+      .withMessage('Integer Error: id should be an integer value.')
       .custom(async (value, { req }) => await isUser(value, req)),
     check('games')
       .custom((value) => isValidArray(value))
@@ -102,10 +117,11 @@ router.post(
   '/user/remove_games',
   [
     check('id')
+      .exists()
+      .withMessage('Empty Field: id is required.')
       .toInt()
       .isInt()
-      .not()
-      .isEmpty()
+      .withMessage('Integer Error: id should be an integer value.')
       .custom(async (value, { req }) => await isUser(value, req)),
     check('games')
       .custom((value) => isValidArray(value))

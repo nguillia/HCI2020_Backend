@@ -9,10 +9,11 @@ router.post(
   '/recommend',
   [
     check('id')
+      .exists()
+      .withMessage('Empty Field: id is required.')
       .toInt()
       .isInt()
-      .not()
-      .isEmpty()
+      .withMessage('Integer Error: id should be an integer value.')
       .custom(async (value, { req }) => await isUser(value, req)),
     validationMiddleware,
   ],

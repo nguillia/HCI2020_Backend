@@ -8,6 +8,7 @@ handleResponse = (req, res, statusCode, data, message) => {
       return res.sendStatus(204);
     case 400:
       isError = true;
+      errorMessage = message || 'Bad Request';
       break;
     case 401:
       isError = true;
