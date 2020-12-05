@@ -3,6 +3,7 @@ const { handleResponse } = require('../services/utils');
 const { check } = require('express-validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { login } = require('../services/authentication');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 router.post(
   '/login',
@@ -12,11 +13,11 @@ router.post(
     validationMiddleware,
   ],
   async (req, res) => {
-    console.log(req.body.password);
     try {
+      const user = await login({ username: req.body.username, password: req.body.password });
       return handleResponse(req, res, 200, {
         success: true,
-        data: await login({ username: req.body.username, password: req.body.password }),
+        data: user,
       });
     } catch (err) {
       return handleResponse(req, res, 400, {}, err);

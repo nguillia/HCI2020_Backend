@@ -1,3 +1,37 @@
+const jwt = require('jsonwebtoken');
+
+// Cookie options for refresh token
+const COOKIE_OPTIONS = {
+  domain: 'localhost', // Comment when leaving production
+  httpOnly: true,
+  secure: !(process.env.NODE_ENV !== 'production'),
+  signed: true,
+};
+
+// Generate access
+generateToken = ({ id, username }) => {
+  const userSession = {
+    userId: id,
+    username: username,
+  };
+
+  // Create private key by combining JWT secret and xsrf token
+  const privateKey = process.env.JWT_SECRET;
+
+  // Generate access token
+  const token = jwt.sign(userSession, privateKey, { expiresIn: process.env.TOKEN_LIFE });
+
+  return {
+    token,
+  };
+};
+
+// Verify token
+verifyToken = (token, callback) => {
+  const privateKey = process.env.JWT_SECRET;
+  jwt.verify(token, privateKey, callback);
+};
+
 // Handle API response
 handleResponse = (req, res, statusCode, data, message) => {
   let isError = false;
@@ -33,5 +67,8 @@ handleResponse = (req, res, statusCode, data, message) => {
 };
 
 module.exports = {
+  COOKIE_OPTIONS,
+  generateToken,
+  verifyToken,
   handleResponse,
 };

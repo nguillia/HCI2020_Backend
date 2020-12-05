@@ -1,4 +1,4 @@
-const { sequelize, Game, Video, Screenshot, Gamemode, Genre, Platform, User } = require('./init');
+const { sequelize, Game, Video, Screenshot, Gamemode, Genre, Platform, User, Session } = require('./init');
 
 // Game-Genre M:N
 Game.belongsToMany(Genre, { through: 'Game_Genre' });
@@ -27,6 +27,10 @@ Game.belongsToMany(User, { through: 'User_Game' });
 // User-Genre M:N
 User.belongsToMany(Genre, { through: 'User_Genre' });
 Genre.belongsToMany(User, { through: 'User_Genre' });
+
+// User-Session 1:1
+User.hasOne(Session);
+Session.belongsTo(User);
 
 console.log('DB Relations added.');
 

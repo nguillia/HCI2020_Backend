@@ -3,6 +3,7 @@ const { handleResponse } = require('../services/utils');
 const { getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink } = require('../database/utils/users');
 const { isUser, isValidArray, toIntegerArray } = require('../middleware/validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
+const { authMiddleware } = require('../middleware/authMiddleware');
 const { check } = require('express-validator');
 
 router.post(
@@ -30,13 +31,7 @@ router.post(
 router.post(
   '/user/dislike_genres',
   [
-    check('id')
-      .exists()
-      .withMessage('Empty Field: id is required.')
-      .toInt()
-      .isInt()
-      .withMessage('Integer Error: id should be an integer value.')
-      .custom(async (value, { req }) => await isUser(value, req)),
+    authMiddleware,
     check('genres')
       .custom((value) => isValidArray(value))
       .customSanitizer((value) => toIntegerArray(value)),
@@ -58,13 +53,7 @@ router.post(
 router.post(
   '/user/dislike_games',
   [
-    check('id')
-      .exists()
-      .withMessage('Empty Field: id is required.')
-      .toInt()
-      .isInt()
-      .withMessage('Integer Error: id should be an integer value.')
-      .custom(async (value, { req }) => await isUser(value, req)),
+    authMiddleware,
     check('games')
       .custom((value) => isValidArray(value))
       .customSanitizer((value) => toIntegerArray(value)),
@@ -87,13 +76,7 @@ router.post(
 router.post(
   '/user/like_games',
   [
-    check('id')
-      .exists()
-      .withMessage('Empty Field: id is required.')
-      .toInt()
-      .isInt()
-      .withMessage('Integer Error: id should be an integer value.')
-      .custom(async (value, { req }) => await isUser(value, req)),
+    authMiddleware,
     check('games')
       .custom((value) => isValidArray(value))
       .customSanitizer((value) => toIntegerArray(value)),
@@ -116,13 +99,7 @@ router.post(
 router.post(
   '/user/remove_games',
   [
-    check('id')
-      .exists()
-      .withMessage('Empty Field: id is required.')
-      .toInt()
-      .isInt()
-      .withMessage('Integer Error: id should be an integer value.')
-      .custom(async (value, { req }) => await isUser(value, req)),
+    authMiddleware,
     check('games')
       .custom((value) => isValidArray(value))
       .customSanitizer((value) => toIntegerArray(value)),
