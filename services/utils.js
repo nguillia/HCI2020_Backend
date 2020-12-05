@@ -1,13 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-// Cookie options for refresh token
-const COOKIE_OPTIONS = {
-  domain: 'localhost', // Comment when leaving production
-  httpOnly: true,
-  secure: !(process.env.NODE_ENV !== 'production'),
-  signed: true,
-};
-
 // Generate access
 generateToken = ({ id, username }) => {
   const userSession = {
@@ -67,7 +59,6 @@ handleResponse = (req, res, statusCode, data, message) => {
 };
 
 module.exports = {
-  COOKIE_OPTIONS,
   generateToken,
   verifyToken,
   handleResponse,
