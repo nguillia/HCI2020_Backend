@@ -30,14 +30,14 @@ const getGamesWithIds = ({ ids }) => {
         await Game.findAll({
           where: {
             id: { [Sequelize.Op.or]: ids },
-            include: [
-              { model: Genre },
-              { model: Platform },
-              { model: Gamemode },
-              { model: Screenshot },
-              { model: Video },
-            ],
           },
+          include: [
+            { model: Genre },
+            { model: Platform },
+            { model: Gamemode },
+            { model: Screenshot },
+            { model: Video },
+          ],
         })
       );
     } catch (err) {
