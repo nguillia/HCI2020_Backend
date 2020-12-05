@@ -6,7 +6,7 @@ const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { check } = require('express-validator');
 
-router.post('/user', [authMiddleware, validationMiddleware], async (req, res) => {
+router.get('/user', [authMiddleware, validationMiddleware], async (req, res) => {
   try {
     if (user)
       return handleResponse(req, res, 200, {
