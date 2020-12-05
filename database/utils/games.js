@@ -26,7 +26,20 @@ const getGames = (limit) => {
 const getGamesWithIds = ({ ids }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      resolve(await Game.findAll({ where: { id: { [Sequelize.Op.or]: ids } } }));
+      resolve(
+        await Game.findAll({
+          where: {
+            id: { [Sequelize.Op.or]: ids },
+            include: [
+              { model: Genre },
+              { model: Platform },
+              { model: Gamemode },
+              { model: Screenshot },
+              { model: Video },
+            ],
+          },
+        })
+      );
     } catch (err) {
       reject(err);
     }
