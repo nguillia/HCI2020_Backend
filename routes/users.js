@@ -6,27 +6,18 @@ const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { check } = require('express-validator');
 
-router.post(
-  '/user',
-  [
-    check('id')
-      .exists()
-      .withMessage('Empty Field: id is required.')
-      .toInt()
-      .isInt()
-      .withMessage('Integer Error: id should be an integer value.'),
-    validationMiddleware,
-  ],
-  async (req, res) => {
-    try {
-      if (user)
-        return handleResponse(req, res, 200, { success: true, data: { user: await getUserInfo({ id: req.body.id }) } });
-      else return handleResponse(req, res, 400, {}, 'User not found.');
-    } catch (err) {
-      return handleResponse(req, res, 400, {}, err);
-    }
+router.post('/user', [authMiddleware, validationMiddleware], async (req, res) => {
+  try {
+    if (user)
+      return handleResponse(req, res, 200, {
+        success: true,
+        data: { user: await getUserInfo({ id: req.body.user.id }) },
+      });
+    else return handleResponse(req, res, 400, {}, 'User not found.');
+  } catch (err) {
+    return handleResponse(req, res, 400, {}, err);
   }
-);
+});
 
 router.post(
   '/user/dislike_genres',
