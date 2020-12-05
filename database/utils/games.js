@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { sequelize, Game, Genre, Platform, Gamemode } = require('../init');
+const { sequelize, Game, Genre, Platform, Gamemode, Screenshot, Video } = require('../init');
 const _ = require('lodash');
 
 const getGames = (limit) => {
@@ -8,7 +8,13 @@ const getGames = (limit) => {
       resolve(
         await Game.findAll({
           ...(limit && { limit }),
-          include: [{ model: Genre }, { model: Platform }, { model: Gamemode }],
+          include: [
+            { model: Genre },
+            { model: Platform },
+            { model: Gamemode },
+            { model: Screenshot },
+            { model: Video },
+          ],
         })
       );
     } catch (err) {
