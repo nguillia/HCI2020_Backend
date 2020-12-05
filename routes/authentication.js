@@ -3,7 +3,6 @@ const { handleResponse } = require('../services/utils');
 const { check } = require('express-validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { login } = require('../services/authentication');
-const { authMiddleware } = require('../middleware/authMiddleware');
 
 router.post(
   '/login',

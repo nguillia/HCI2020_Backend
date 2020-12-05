@@ -7,7 +7,6 @@ const PlatformSchema = require('./models/Platform');
 const ScreenshotSchema = require('./models/Screenshot');
 const VideoSchema = require('./models/Video');
 const UserSchema = require('./models/User');
-const SessionSchema = require('./models/Session');
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
   host: process.env.DB_HOST,
@@ -46,7 +45,6 @@ module.exports.Screenshot = sequelize.define(
 );
 module.exports.Video = sequelize.define(VideoSchema.name, VideoSchema.attributes, VideoSchema.options);
 module.exports.User = sequelize.define(UserSchema.name, UserSchema.attributes, UserSchema.options);
-module.exports.Session = sequelize.define(SessionSchema.name, SessionSchema.attributes, SessionSchema.options);
 
 module.exports.User_Likedgame = sequelize.define('User_Game', { liked: Sequelize.BOOLEAN });
 module.exports.User_Genre = sequelize.define('User_Genre');

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { handleResponse } = require('../services/utils');
 const { getUserInfo, updateGenres, likeDislikeGames, removeUserGamesLink } = require('../database/utils/users');
-const { isUser, isValidArray, toIntegerArray } = require('../middleware/validator');
+const { isValidArray, toIntegerArray } = require('../middleware/validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { check } = require('express-validator');
