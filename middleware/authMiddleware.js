@@ -1,4 +1,5 @@
 const { handleResponse, verifyToken } = require('../services/utils');
+const { User } = require('../database/init');
 
 const authMiddleware = async (req, res, next) => {
   // Check header, url params or post params for token
@@ -9,10 +10,10 @@ const authMiddleware = async (req, res, next) => {
   const token = header.replace('Bearer ', '');
 
   // Verify token with secret and xsrf token
-  verifyToken(token, (err, payload) => {
+  verifyToken(token, async (err, payload) => {
     if (err) return handleResponse(req, res, 401);
     else {
-      req.body.user = payload;
+      req.body.user = await User.findOne({ where: { id: payload.userId }, attributes: ['id', 'username'] });
       next();
     }
   });

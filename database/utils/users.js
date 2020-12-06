@@ -97,6 +97,7 @@ const likeDislikeGames = ({ userObj, gameIds, like }) => {
               userObj.addGame(gameObj, { through: { liked: like } });
               output.success.push({ gameId });
             } catch (err) {
+              console.log(err);
               output.error.push({ gameId });
               console.log(`Game ${gameId} not added to user.`);
             }
