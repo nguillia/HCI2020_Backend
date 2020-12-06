@@ -46,4 +46,24 @@ const getGamesWithIds = ({ ids }) => {
   });
 };
 
-module.exports = { getGames, getGamesWithIds };
+const getGamesWithoutGenres = ({ ids }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findAll({
+          include: [
+            { model: Genre, where: { id: { [Sequelize.Op.notIn]: ids } } },
+            { model: Platform },
+            { model: Gamemode },
+            { model: Screenshot },
+            { model: Video },
+          ],
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+module.exports = { getGames, getGamesWithIds, getGamesWithoutGenres };

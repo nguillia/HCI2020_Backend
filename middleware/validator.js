@@ -11,7 +11,8 @@ const isUser = async (id, req) => {
 };
 
 const isValidArray = (array) => {
-  if (Array.isArray(array) && array.length > 0) return true;
+  // if (Array.isArray(array) && array.length > 0) return true;
+  if (Array.isArray(array)) return true;
   return Promise.reject('Invalid Array.');
 };
 

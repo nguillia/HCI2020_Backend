@@ -5,6 +5,7 @@ const authMiddleware = async (req, res, next) => {
   const header = req.headers['authorization'];
   if (!header) return handleResponse(req, res, 401);
 
+  if (!header.includes('Bearer ')) return handleResponse(req, res, 401);
   const token = header.replace('Bearer ', '');
 
   // Verify token with secret and xsrf token
