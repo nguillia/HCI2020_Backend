@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { handleResponse } = require('../services/utils');
 const { getRecommendations, getInitialRecommendations } = require('../database/utils/recommender');
+const { updateGenres } = require('../database/utils/users');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { isValidArray, toIntegerArray } = require('../middleware/validator');
@@ -22,7 +23,7 @@ router.get('/recommend', [authMiddleware, validationMiddleware], async (req, res
 router.post(
   '/initialize',
   [
-    // authMiddleware,
+    authMiddleware,
     check('liked_genres')
       .custom((value) => isValidArray(value))
       .customSanitizer((value) => toIntegerArray(value)),
@@ -36,18 +37,33 @@ router.post(
       if (_.intersection(req.body.liked_genres, req.body.disliked_genres).length > 0)
         return handleResponse(req, res, 400, {}, 'Liked and Disliked Genres do not agree.');
 
-      return handleResponse(req, res, 200, {
-        success: true,
-        data: {
-          games: await getInitialRecommendations({
-            liked_genres: req.body.liked_genres,
-            disliked_genres: req.body.disliked_genres,
-          }),
-        },
+      if (req.body.liked_genres.length > 5 || req.body.disliked_genres.length > 3)
+        return handleResponse(req, res, 400, {}, 'Liked and Disliked Genres overflow.');
+
+      // Pull games from the DB
+      const games = await getInitialRecommendations({
+        liked_genres: req.body.liked_genres,
+        disliked_genres: req.body.disliked_genres,
       });
+      if (!games) return handleResponse(req, res, 400, {}, 'No games found for the specified genres.');
+
+      try {
+        // Add disliked genres to the user
+
+        return handleResponse(req, res, 200, {
+          success: true,
+          data: {
+            games,
+            genres: await updateGenres({ userObj: req.body.user, genreIds: req.body.disliked_genres }),
+          },
+        });
+      } catch (err) {
+        console.log(err);
+        return handleResponse(req, res, 400, {}, `Updating genres failed with: ${err}`);
+      }
     } catch (err) {
-      console.log('err', err);
-      return handleResponse(req, res, 400, {}, err);
+      console.log(err);
+      return handleResponse(req, res, 400, {}, `Fetching games failed with: ${err}`);
     }
   }
 );
