@@ -58,3 +58,9 @@
 | Endpoint                      | Description                                                              |
 | :---------------------------- | :----------------------------------------------------------------------- |
 | **api/recommender/recommend** | Recommend ten new games, games that the user has not yet liked/disliked. |
+
+#### POST Requests
+
+| Endpoint                       | Parameters                                                                                                 | Description                                                                                                          |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **api/recommender/initialize** | **liked_genres**[Array]<br/>&nbsp;&nbsp;Genre IDs<br/>**disliked_genres**[Array]<br/>&nbsp;&nbsp;Genre IDs | Recommend 10 games based on the liked and disliked games. Additionally, add the disliked genres to the user profile. |
