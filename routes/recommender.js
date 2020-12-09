@@ -48,8 +48,6 @@ router.post(
       if (!games) return handleResponse(req, res, 400, {}, 'No games found for the specified genres.');
 
       try {
-        // Add disliked genres to the user
-
         return handleResponse(req, res, 200, {
           success: true,
           data: {

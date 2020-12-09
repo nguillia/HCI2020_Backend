@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const { Game_Genre, User_Likedgame, User } = require('../init');
 const { getGames, getGamesGenres } = require('./games');
 const _ = require('lodash');
 
@@ -22,15 +21,10 @@ const getRecommendations = ({ userObj }) => {
   });
 };
 
-const getInitialRecommendations = ({ liked_genres, disliked_genres }) => {
+const getInitialRecommendations = (genres) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log('ID List', disliked_genres);
-      const gamesObjs = await getGamesGenres({ liked_genres, disliked_genres });
-      console.log(gamesObjs);
-
-      // Insert magic recommender function here
-      resolve(gamesObjs);
+      resolve(await getGamesGenres(genres));
     } catch (error) {
       reject(error);
     }
