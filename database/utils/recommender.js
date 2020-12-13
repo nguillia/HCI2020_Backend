@@ -1,20 +1,15 @@
 const Sequelize = require('sequelize');
-const { getGames, getGamesGenres } = require('./games');
+const { getGames, getGamesGenres, getGamesWithout } = require('./games');
 const _ = require('lodash');
 
 const getRecommendations = ({ userObj }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(userObj);
-      const gamesObjs = await getGames();
       const recommendedGameIds = _.map(await userObj.getGames(), (game) => game.id);
-
-      const newGamesObjs = _.filter(gamesObjs, (game) => {
-        return !recommendedGameIds.includes(game.id);
-      });
+      const games = await getGamesWithout({ excluded: recommendedGameIds });
 
       // Insert magic recommender function here
-      resolve(_.slice(_.shuffle(newGamesObjs), 0, 10));
+      resolve(_.slice(_.shuffle(games), 0, 10));
     } catch (error) {
       reject(error);
     }

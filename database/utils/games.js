@@ -76,4 +76,31 @@ const getGamesGenres = ({ liked_genres, disliked_genres }) => {
   });
 };
 
-module.exports = { getGames, getGamesWithIds, getGamesGenres };
+const getGamesWithout = ({ excluded }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findAll({
+          include: [
+            {
+              model: Genre,
+              where: {
+                id: { [Sequelize.Op.notIn]: excluded },
+              },
+            },
+            { model: Platform },
+            { model: Gamemode },
+            { model: Screenshot },
+            { model: Video },
+          ],
+          order: [['followers', 'DESC']],
+          limit: 10,
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+module.exports = { getGames, getGamesWithIds, getGamesGenres, getGamesWithout };
