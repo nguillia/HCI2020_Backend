@@ -60,7 +60,6 @@ const updateGenres = ({ userObj, genreIds }) => {
 
       if (genresObj && genresObj.length > 0) {
         genresObj.forEach((genreObj) => {
-          console.log(genreObj.id);
           if (genreIds.includes(genreObj.id)) {
             // Dislike the genre
             try {
