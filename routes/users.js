@@ -6,15 +6,14 @@ const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const { check } = require('express-validator');
 
-router.get('/user', [authMiddleware, validationMiddleware], async (req, res) => {
+router.get('/user', [authMiddleware], async (req, res) => {
   try {
-    if (user)
-      return handleResponse(req, res, 200, {
-        success: true,
-        data: { user: await getUserInfo({ id: req.body.user.id }) },
-      });
-    else return handleResponse(req, res, 400, {}, 'User not found.');
+    return handleResponse(req, res, 200, {
+      success: true,
+      data: { user: await getUserInfo({ id: req.body.user.id }) },
+    });
   } catch (err) {
+    console.log(err);
     return handleResponse(req, res, 400, {}, err);
   }
 });

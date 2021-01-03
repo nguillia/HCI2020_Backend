@@ -1,40 +1,96 @@
-const Sequelize = require('sequelize');
-const { Game_Genre, User_Likedgame, User } = require('../init');
-const { getGames, getGamesGenres } = require('./games');
+const { getGamesGenres, getGamesWithIds } = require('./games');
+const axios = require('axios');
 const _ = require('lodash');
 
-const getRecommendations = ({ userObj }) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      console.log(userObj);
-      const gamesObjs = await getGames();
-      const recommendedGameIds = _.map(await userObj.getGames(), (game) => game.id);
+axios.defaults.baseURL = 'https://hci2020-python.herokuapp.com';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-      const newGamesObjs = _.filter(gamesObjs, (game) => {
-        return !recommendedGameIds.includes(game.id);
+const getGenreBasedRecommendations = ({ userObj }) => {
+  return new Promise(async (resolve, reject) => {
+    //Disliked genres
+    const dislikedGenres = await userObj.getGenres();
+    // Already liked/disliked games
+    const recommendedGames = await userObj.getGames();
+
+    const genres = _.map(dislikedGenres, ({ id }) => id + '');
+
+    const liked = _.map(
+      _.filter(recommendedGames, (game) => game.User_Game.liked),
+      ({ id }) => id + ''
+    );
+
+    const disliked = _.map(
+      _.filter(recommendedGames, (game) => !game.User_Game.liked),
+      ({ id }) => id + ''
+    );
+
+    try {
+      const request = await axios({
+        method: 'post',
+        url: '/cosine_similarity',
+        data: JSON.stringify({
+          liked_games: liked,
+          disliked_games: disliked,
+          genres,
+        }),
       });
 
-      // Insert magic recommender function here
-      resolve(_.slice(_.shuffle(newGamesObjs), 0, 10));
-    } catch (error) {
-      reject(error);
+      if (request.data.success) resolve(await getGamesWithIds({ ids: request.data.recommendations }));
+      else reject('Python server error.');
+    } catch (err) {
+      console.error(err);
+      reject(err);
     }
   });
 };
 
-const getInitialRecommendations = ({ liked_genres, disliked_genres }) => {
+const getTextBasedRecommendations = ({ userObj }) => {
+  return new Promise(async (resolve, reject) => {
+    //Disliked genres
+    const dislikedGenres = await userObj.getGenres();
+    // Already liked/disliked games
+    const recommendedGames = await userObj.getGames();
+
+    const genres = _.map(dislikedGenres, ({ id }) => id + '');
+
+    const liked = _.map(
+      _.filter(recommendedGames, (game) => game.User_Game.liked),
+      ({ id }) => id + ''
+    );
+
+    const disliked = _.map(
+      _.filter(recommendedGames, (game) => !game.User_Game.liked),
+      ({ id }) => id + ''
+    );
+
+    try {
+      const request = await axios({
+        method: 'post',
+        url: '/tf_idf',
+        data: JSON.stringify({
+          liked_games: liked,
+          disliked_games: disliked,
+          genres,
+        }),
+      });
+
+      if (request.data.success) resolve(await getGamesWithIds({ ids: request.data.recommendations }));
+      else reject('Python server error.');
+    } catch (err) {
+      console.error(err);
+      reject(err);
+    }
+  });
+};
+
+const getInitialRecommendations = (genres) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log('ID List', disliked_genres);
-      const gamesObjs = await getGamesGenres({ liked_genres, disliked_genres });
-      console.log(gamesObjs);
-
-      // Insert magic recommender function here
-      resolve(gamesObjs);
+      resolve(await getGamesGenres(genres));
     } catch (error) {
       reject(error);
     }
   });
 };
 
-module.exports = { getRecommendations, getInitialRecommendations };
+module.exports = { getGenreBasedRecommendations, getInitialRecommendations, getTextBasedRecommendations };

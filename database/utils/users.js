@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { sequelize, User, Game, Genre } = require('../init');
+const { sequelize, User, Game, Genre, Screenshot, Video, Gamemode, Platform } = require('../init');
 const { getGenres } = require('../utils/genres');
 const { getGamesWithIds } = require('../utils/games');
 const _ = require('lodash');
@@ -31,7 +31,19 @@ const getUserInfo = ({ id }) => {
         await User.findOne({
           where: { id: id },
           attributes: ['id', 'username'],
-          include: [{ model: Game }, { model: Genre }],
+          include: [
+            {
+              model: Game,
+              include: [
+                { model: Screenshot },
+                { model: Video },
+                { model: Platform },
+                { model: Gamemode },
+                { model: Genre },
+              ],
+            },
+            { model: Genre },
+          ],
         })
       );
     } catch (err) {
@@ -48,7 +60,6 @@ const updateGenres = ({ userObj, genreIds }) => {
 
       if (genresObj && genresObj.length > 0) {
         genresObj.forEach((genreObj) => {
-          console.log(genreObj.id);
           if (genreIds.includes(genreObj.id)) {
             // Dislike the genre
             try {

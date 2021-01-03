@@ -15,6 +15,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
+    "compute-cosine-similarity": "^1.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
@@ -28,6 +29,10 @@
     "ms": "^2.1.2",
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.3.5",
+    "stopword": "^1.0.6",
+    "term-frequency": "0.0.15",
+    "term-vector": "0.1.2",
+    "tf-idf-search": "^1.1.3"
   }
 }

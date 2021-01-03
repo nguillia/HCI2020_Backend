@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const { handleResponse } = require('../services/utils');
-const { getRecommendations, getInitialRecommendations } = require('../database/utils/recommender');
+const {
+  getGenreBasedRecommendations,
+  getInitialRecommendations,
+  getTextBasedRecommendations,
+} = require('../database/utils/recommender');
 const { updateGenres } = require('../database/utils/users');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { authMiddleware } = require('../middleware/authMiddleware');
@@ -8,11 +12,23 @@ const { isValidArray, toIntegerArray } = require('../middleware/validator');
 const { check } = require('express-validator');
 const _ = require('lodash');
 
-router.get('/recommend', [authMiddleware, validationMiddleware], async (req, res) => {
+router.get('/recommend_1', [authMiddleware, validationMiddleware], async (req, res) => {
   try {
     return handleResponse(req, res, 200, {
       success: true,
-      data: { games: await getRecommendations({ userObj: req.body.user }) },
+      data: { game: await getGenreBasedRecommendations({ userObj: req.body.user }) },
+    });
+  } catch (err) {
+    console.log('err', err);
+    return handleResponse(req, res, 400, {}, err);
+  }
+});
+
+router.get('/recommend_2', [authMiddleware, validationMiddleware], async (req, res) => {
+  try {
+    return handleResponse(req, res, 200, {
+      success: true,
+      data: { game: await getTextBasedRecommendations({ userObj: req.body.user }) },
     });
   } catch (err) {
     console.log('err', err);
@@ -48,8 +64,6 @@ router.post(
       if (!games) return handleResponse(req, res, 400, {}, 'No games found for the specified genres.');
 
       try {
-        // Add disliked genres to the user
-
         return handleResponse(req, res, 200, {
           success: true,
           data: {

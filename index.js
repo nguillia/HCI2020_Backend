@@ -12,6 +12,7 @@ const cors = require('cors');
 
 /* CUSTOM PACKAGES */
 const database = require('./database/init');
+const { concat } = require('lodash');
 /* END CUSTOM PACKAGES */
 
 /* VARIABLES */
@@ -46,6 +47,9 @@ database
     console.log(r);
     require('./database/relations');
 
+    const { removeGames, createJson, cosineSimilarity } = require('./services/recommender');
+    // removeGames();
+    // createJson();
     /* DO ALL DB RELATED STUFF HERE*/
     //require('./services/gamepuller').pullGames();
   })

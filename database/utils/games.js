@@ -23,6 +23,29 @@ const getGames = (limit) => {
   });
 };
 
+const getGamesWithId = ({ id }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findOne({
+          where: {
+            id: id,
+          },
+          include: [
+            { model: Genre },
+            { model: Platform },
+            { model: Gamemode },
+            { model: Screenshot },
+            { model: Video },
+          ],
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 const getGamesWithIds = ({ ids }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -76,4 +99,64 @@ const getGamesGenres = ({ liked_genres, disliked_genres }) => {
   });
 };
 
-module.exports = { getGames, getGamesWithIds, getGamesGenres };
+const getGamesWithout = ({ excluded }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findAll({
+          include: [
+            {
+              model: Genre,
+              where: {
+                id: { [Sequelize.Op.notIn]: excluded },
+              },
+            },
+            // { model: Platform },
+            // { model: Gamemode },
+            // { model: Screenshot },
+            // { model: Video },
+          ],
+          // order: [['followers', 'DESC']],
+          // limit: 500,
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+const getGamesWithoutGenresRecommended = ({ excludedGenres, excludedGames }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findAll({
+          where: {
+            id: { [Sequelize.Op.notIn]: excludedGames },
+          },
+          include: [
+            {
+              model: Genre,
+              where: {
+                id: { [Sequelize.Op.notIn]: excludedGenres },
+              },
+            },
+          ],
+          order: [['followers', 'DESC']],
+          limit: 5000,
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+module.exports = {
+  getGames,
+  getGamesWithId,
+  getGamesWithIds,
+  getGamesGenres,
+  getGamesWithout,
+  getGamesWithoutGenresRecommended,
+};
