@@ -48,4 +48,4 @@ module.exports.User = sequelize.define(UserSchema.name, UserSchema.attributes, U
 
 module.exports.User_Game = sequelize.define('User_Game', { liked: Sequelize.BOOLEAN });
 module.exports.User_Genre = sequelize.define('User_Genre');
-//module.exports.Game_Genre = sequelize.define('Game_Genre');
+module.exports.Game_Genre = sequelize.define('Game_Genre');

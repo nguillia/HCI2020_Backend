@@ -12,7 +12,7 @@ const { isValidArray, toIntegerArray } = require('../middleware/validator');
 const { check } = require('express-validator');
 const _ = require('lodash');
 
-router.get('/recommend_1', [authMiddleware, validationMiddleware], async (req, res) => {
+router.get('/cosine_similarity', [authMiddleware, validationMiddleware], async (req, res) => {
   try {
     return handleResponse(req, res, 200, {
       success: true,
@@ -24,7 +24,7 @@ router.get('/recommend_1', [authMiddleware, validationMiddleware], async (req, r
   }
 });
 
-router.get('/recommend_2', [authMiddleware, validationMiddleware], async (req, res) => {
+router.get('/tf_idf', [authMiddleware, validationMiddleware], async (req, res) => {
   try {
     return handleResponse(req, res, 200, {
       success: true,

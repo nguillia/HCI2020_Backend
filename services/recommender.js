@@ -1,17 +1,14 @@
-const { Game, Genre } = require('../database/init');
+const { Game, Genre, Game_Genre } = require('../database/init');
 const similarity = require('compute-cosine-similarity');
+const Sequelize = require('sequelize');
 const fs = require('fs');
-const TfIdf = require('tf-idf-search');
 const sw = require('stopword');
-const tf = require('term-frequency');
-const tv = require('term-vector');
 const _ = require('lodash');
 
 const removeGames = () => {
   return new Promise(async (resolve, reject) => {
-    const games = await Game.findAll({ order: [['followers', 'DESC']], limit: 5000 });
+    const games = await Game.findAll();
     const list = _.map(games, ({ id }) => id);
-    console.log(list);
   });
 };
 

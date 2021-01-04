@@ -47,9 +47,6 @@ database
     console.log(r);
     require('./database/relations');
 
-    const { removeGames, createJson, cosineSimilarity } = require('./services/recommender');
-    // removeGames();
-    // createJson();
     /* DO ALL DB RELATED STUFF HERE*/
     //require('./services/gamepuller').pullGames();
   })

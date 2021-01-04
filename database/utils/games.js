@@ -2,12 +2,11 @@ const Sequelize = require('sequelize');
 const { sequelize, Game, Genre, Platform, Gamemode, Screenshot, Video } = require('../init');
 const _ = require('lodash');
 
-const getGames = (limit) => {
+const getGames = () => {
   return new Promise(async (resolve, reject) => {
     try {
       resolve(
         await Game.findAll({
-          ...(limit && { limit }),
           include: [
             { model: Genre },
             { model: Platform },
@@ -111,13 +110,7 @@ const getGamesWithout = ({ excluded }) => {
                 id: { [Sequelize.Op.notIn]: excluded },
               },
             },
-            // { model: Platform },
-            // { model: Gamemode },
-            // { model: Screenshot },
-            // { model: Video },
           ],
-          // order: [['followers', 'DESC']],
-          // limit: 500,
         })
       );
     } catch (err) {
@@ -142,8 +135,6 @@ const getGamesWithoutGenresRecommended = ({ excludedGenres, excludedGames }) => 
               },
             },
           ],
-          order: [['followers', 'DESC']],
-          limit: 5000,
         })
       );
     } catch (err) {

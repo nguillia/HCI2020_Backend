@@ -55,10 +55,10 @@
 
 #### GET Requests
 
-| Endpoint                        | Description                                                                                           |
-| :------------------------------ | :---------------------------------------------------------------------------------------------------- |
-| **api/recommender/recommend_1** | Recommend five new games, games that the user has not yet liked/disliked, based on Cosine Similarity. |
-| **api/recommender/recommend_2** | Recommend five new games, games that the user has not yet liked/disliked, based on TF-IDF.            |
+| Endpoint                              | Description                                                                                           |
+| :------------------------------------ | :---------------------------------------------------------------------------------------------------- |
+| **api/recommender/cosine_similarity** | Recommend five new games, games that the user has not yet liked/disliked, based on Cosine Similarity. |
+| **api/recommender/tf_idf**            | Recommend five new games, games that the user has not yet liked/disliked, based on TF-IDF.            |
 
 #### POST Requests
 
