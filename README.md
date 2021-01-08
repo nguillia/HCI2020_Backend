@@ -33,9 +33,10 @@
 
 #### POST Requests
 
-| Endpoint    | Parameters                                                   | Description             |
-| :---------- | ------------------------------------------------------------ | :---------------------- |
-| **/games/** | **limit**[Int]<br/>&nbsp;&nbsp;Max amount of games to return | List the first x games. |
+| Endpoint        | Parameters                                                   | Description                                        |
+| :-------------- | ------------------------------------------------------------ | :------------------------------------------------- |
+| **/games/**     | **limit**[Int]<br/>&nbsp;&nbsp;Max amount of games to return | List the first x games.                            |
+| **/games/game** | **gameId**[Int]<br/>&nbsp;&nbsp;Game ID of the game          | Get the information of the game with specified ID. |
 
 ### Genres
 

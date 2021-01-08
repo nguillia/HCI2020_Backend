@@ -27,4 +27,27 @@ router.post(
   }
 );
 
+router.post(
+  '/game',
+  [
+    check('gameId')
+      .exists()
+      .withMessage('Empty Field: gameId is required.')
+      .toInt()
+      .isInt()
+      .withMessage('Integer Error: gameId should be an integer value.'),
+    validationMiddleware,
+  ],
+  async (req, res) => {
+    try {
+      return handleResponse(req, res, 200, {
+        success: true,
+        data: await getGamesWithId({ id: req.body.gameId }),
+      });
+    } catch (err) {
+      return handleResponse(req, res, 400, {}, err);
+    }
+  }
+);
+
 module.exports = router;
