@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { handleResponse } = require('../services/utils');
-const { getGames } = require('../database/utils/games');
+const { getGames, getGamesWithId } = require('../database/utils/games');
 const { check } = require('express-validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 
