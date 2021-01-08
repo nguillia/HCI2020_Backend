@@ -31,12 +31,6 @@
 
 ### Games
 
-#### GET Requests
-
-| Endpoint    | Description         |
-| :---------- | :------------------ |
-| **/games/** | List all the games. |
-
 #### POST Requests
 
 | Endpoint    | Parameters                                                   | Description             |
