@@ -35,14 +35,16 @@ const getUserInfo = ({ id }) => {
             {
               model: Game,
               include: [
-                { model: Screenshot },
+                { model: Screenshot, attributes: ['screenshot_id'] },
+
                 // { model: Video },
                 // { model: Platform },
                 // { model: Gamemode },
                 // { model: Genre },
               ],
+              attributes: ['id', 'name', 'cover_id'],
             },
-            { model: Genre },
+            { model: Genre, attributes: ['name'] },
           ],
         })
       );
