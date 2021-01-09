@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { sequelize, Game, Genre, Platform, Gamemode, Screenshot, Video } = require('../init');
 const _ = require('lodash');
+const { attributes } = require('../models/Game');
 
 const getGames = () => {
   return new Promise(async (resolve, reject) => {
@@ -8,12 +9,12 @@ const getGames = () => {
       resolve(
         await Game.findAll({
           include: [
-            { model: Genre },
-            { model: Platform },
-            { model: Gamemode },
-            { model: Screenshot },
-            { model: Video },
+            { model: Genre, attributes: ['name'] },
+            { model: Platform, attributes: ['id'] },
+            { model: Screenshot, attributes: ['screenshot_id'] },
+            { model: Video, attributes: ['video_id'] },
           ],
+          attributes: ['id', 'name', 'summary', 'rating', 'aggregated_rating'],
         })
       );
     } catch (err) {
@@ -31,12 +32,12 @@ const getGamesWithId = ({ id }) => {
             id: id,
           },
           include: [
-            { model: Genre },
-            { model: Platform },
-            { model: Gamemode },
-            { model: Screenshot },
-            { model: Video },
+            { model: Genre, attributes: ['name'] },
+            { model: Platform, attributes: ['id'] },
+            { model: Screenshot, attributes: ['screenshot_id'] },
+            { model: Video, attributes: ['video_id'] },
           ],
+          attributes: ['id', 'name', 'summary', 'rating', 'aggregated_rating'],
         })
       );
     } catch (err) {
@@ -51,15 +52,15 @@ const getGamesWithIds = ({ ids }) => {
       resolve(
         await Game.findAll({
           where: {
-            id: { [Sequelize.Op.or]: ids },
+            id: { [Sequelize.Op.in]: ids },
           },
           include: [
-            { model: Genre },
-            { model: Platform },
-            { model: Gamemode },
-            { model: Screenshot },
-            { model: Video },
+            { model: Genre, attributes: ['name'] },
+            { model: Platform, attributes: ['id'] },
+            { model: Screenshot, attributes: ['screenshot_id'] },
+            { model: Video, attributes: ['video_id'] },
           ],
+          attributes: ['id', 'name', 'summary', 'rating', 'aggregated_rating'],
         })
       );
     } catch (err) {
@@ -71,7 +72,7 @@ const getGamesWithIds = ({ ids }) => {
 const getGamesGenres = ({ liked_genres, disliked_genres }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      resolve(
+      const recommendations = _.map(
         await Game.findAll({
           include: [
             {
@@ -83,15 +84,36 @@ const getGamesGenres = ({ liked_genres, disliked_genres }) => {
                 ],
               },
             },
-            { model: Platform },
-            { model: Gamemode },
-            { model: Screenshot },
-            { model: Video },
           ],
           order: [['followers', 'DESC']],
           limit: 10,
-        })
+          attributes: ['id', 'followers'],
+        }),
+        ({ id }) => id
       );
+
+      if (recommendations.length < 10) {
+        const others = _.map(
+          await Game.findAll({
+            include: [
+              {
+                model: Genre,
+                where: {
+                  [Sequelize.Op.and]: [{ id: { [Sequelize.Op.notIn]: disliked_genres } }],
+                },
+              },
+            ],
+            where: {
+              id: { [Sequelize.Op.notIn]: recommendations },
+            },
+            order: [['followers', 'DESC']],
+            limit: 10 - recommendations.length,
+            attributes: ['id', 'followers'],
+          }),
+          ({ id }) => id
+        );
+        resolve(await getGamesWithIds({ ids: _.concat(recommendations, others) }));
+      } else resolve(await getGamesWithIds({ ids: recommendations }));
     } catch (err) {
       reject(err);
     }
