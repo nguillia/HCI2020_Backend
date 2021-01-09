@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const { sequelize, User, Game, Genre, Screenshot, Video, Gamemode, Platform } = require('../init');
 const { getGenres } = require('../utils/genres');
 const { getGamesWithIds } = require('../utils/games');
+const { attributes } = require('./attributes');
 const _ = require('lodash');
 
 const getUser = ({ id }) => {
@@ -35,15 +36,12 @@ const getUserInfo = ({ id }) => {
             {
               model: Game,
               include: [
-                { model: Screenshot, attributes: ['screenshot_id'] },
-                { model: Genre, attributes: ['name'] },
-                // { model: Video },
-                // { model: Platform },
-                // { model: Gamemode },
+                { model: Screenshot, attributes: attributes.screenshot },
+                { model: Genre, attributes: attributes.genre },
               ],
-              attributes: ['id', 'name', 'cover_id'],
+              attributes: attributes.game,
             },
-            { model: Genre, attributes: ['name'] },
+            { model: Genre, attributes: attributes.genre },
           ],
         })
       );

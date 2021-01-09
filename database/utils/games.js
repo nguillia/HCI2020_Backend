@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const { sequelize, Game, Genre, Platform, Gamemode, Screenshot, Video } = require('../init');
 const _ = require('lodash');
-const { attributes } = require('../models/Game');
+const { attributes } = require('./attributes');
 
 const getGames = () => {
   return new Promise(async (resolve, reject) => {
@@ -9,12 +9,12 @@ const getGames = () => {
       resolve(
         await Game.findAll({
           include: [
-            { model: Genre, attributes: ['name'] },
-            { model: Platform, attributes: ['id'] },
-            { model: Screenshot, attributes: ['screenshot_id'] },
-            { model: Video, attributes: ['video_id'] },
+            { model: Genre, attributes: attributes.genre },
+            { model: Platform, attributes: attributes.platform },
+            { model: Screenshot, attributes: attributes.screenshot },
+            { model: Video, attributes: attributes.video },
           ],
-          attributes: ['id', 'name', 'summary', 'rating', 'aggregated_rating'],
+          attributes: attributes.game,
         })
       );
     } catch (err) {
@@ -32,12 +32,12 @@ const getGamesWithId = ({ id }) => {
             id: id,
           },
           include: [
-            { model: Genre, attributes: ['name'] },
-            { model: Platform, attributes: ['id'] },
-            { model: Screenshot, attributes: ['screenshot_id'] },
-            { model: Video, attributes: ['video_id'] },
+            { model: Genre, attributes: attributes.genre },
+            { model: Platform, attributes: attributes.platform },
+            { model: Screenshot, attributes: attributes.screenshot },
+            { model: Video, attributes: attributes.video },
           ],
-          attributes: ['id', 'name', 'summary', 'rating', 'aggregated_rating'],
+          attributes: attributes.game,
         })
       );
     } catch (err) {
@@ -55,12 +55,12 @@ const getGamesWithIds = ({ ids }) => {
             id: { [Sequelize.Op.in]: ids },
           },
           include: [
-            { model: Genre, attributes: ['name'] },
-            { model: Platform, attributes: ['id'] },
-            { model: Screenshot, attributes: ['screenshot_id'] },
-            { model: Video, attributes: ['video_id'] },
+            { model: Genre, attributes: attributes.genre },
+            { model: Platform, attributes: attributes.platform },
+            { model: Screenshot, attributes: attributes.screenshot },
+            { model: Video, attributes: attributes.video },
           ],
-          attributes: ['id', 'name', 'summary', 'rating', 'aggregated_rating'],
+          attributes: attributes.game,
         })
       );
     } catch (err) {
@@ -131,8 +131,10 @@ const getGamesWithout = ({ excluded }) => {
               where: {
                 id: { [Sequelize.Op.notIn]: excluded },
               },
+              attributes: attributes.genre,
             },
           ],
+          attributes: attributes.game,
         })
       );
     } catch (err) {
@@ -155,8 +157,10 @@ const getGamesWithoutGenresRecommended = ({ excludedGenres, excludedGames }) => 
               where: {
                 id: { [Sequelize.Op.notIn]: excludedGenres },
               },
+              attributes: attributes.genre,
             },
           ],
+          attributes: attributes.game,
         })
       );
     } catch (err) {
