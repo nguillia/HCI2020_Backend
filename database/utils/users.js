@@ -40,6 +40,7 @@ const getUserInfo = ({ id }) => {
                 { model: Genre, attributes: attributes.genre },
               ],
               attributes: attributes.game,
+              through: { where: { liked: true } },
             },
             { model: Genre, attributes: attributes.genre },
           ],
