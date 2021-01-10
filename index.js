@@ -49,6 +49,9 @@ database
 
     /* DO ALL DB RELATED STUFF HERE*/
     //require('./services/gamepuller').pullGames();
+
+    // const bcrypt = require('bcrypt');
+    // bcrypt.hash('', 12).then((val) => console.log(val));
   })
   .catch((err) => console.error(err));
 
