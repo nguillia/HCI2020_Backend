@@ -69,6 +69,31 @@ const getGamesWithIds = ({ ids }) => {
   });
 };
 
+const getRandomGames = ({ excluded }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      resolve(
+        await Game.findAll({
+          where: {
+            id: { [Sequelize.Op.notIn]: excluded },
+          },
+          include: [
+            { model: Genre, attributes: attributes.genre },
+            { model: Platform, attributes: attributes.platform },
+            { model: Screenshot, attributes: attributes.screenshot },
+            { model: Video, attributes: attributes.video },
+          ],
+          attributes: attributes.game,
+          order: Sequelize.literal('rand()'),
+          limit: 5,
+        })
+      );
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 const getGamesGenres = ({ liked_genres, disliked_genres }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -85,9 +110,11 @@ const getGamesGenres = ({ liked_genres, disliked_genres }) => {
               },
             },
           ],
-          order: [['followers', 'DESC']],
-          limit: 10,
+          // order: [['followers', 'DESC']],
+          where: { followers: { [Sequelize.Op.gte]: 50 } },
           attributes: ['id', 'followers'],
+          order: Sequelize.literal('rand()'),
+          limit: 10,
         }),
         ({ id }) => id
       );
@@ -176,4 +203,5 @@ module.exports = {
   getGamesGenres,
   getGamesWithout,
   getGamesWithoutGenresRecommended,
+  getRandomGames,
 };

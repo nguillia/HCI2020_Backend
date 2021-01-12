@@ -1,4 +1,4 @@
-const { getGamesGenres, getGamesWithIds } = require('./games');
+const { getGamesGenres, getGamesWithIds, getRandomGames } = require('./games');
 const axios = require('axios');
 const _ = require('lodash');
 
@@ -35,8 +35,11 @@ const getGenreBasedRecommendations = ({ userObj }) => {
         }),
       });
 
-      if (request.data.success) resolve(await getGamesWithIds({ ids: request.data.recommendations }));
-      else reject('Python server error.');
+      if (request.data.success) {
+        if (request.data.recommendations.length > 0)
+          resolve(await getGamesWithIds({ ids: request.data.recommendations }));
+        else resolve(await getRandomGames({ excluded: _.map(recommendedGames, ({ id }) => id) }));
+      } else reject('Python server error.');
     } catch (err) {
       console.error(err);
       reject(err);
