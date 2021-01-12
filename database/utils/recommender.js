@@ -20,7 +20,7 @@ const getGenreBasedRecommendations = ({ userObj }) => {
     );
 
     const disliked = _.map(
-      _.filter(recommendedGames, (game) => !game.User_Game.liked),
+      _.filter(recommendedGames, (game) => !game.User_Game.disliked),
       ({ id }) => id + ''
     );
 
@@ -59,7 +59,7 @@ const getTextBasedRecommendations = ({ userObj }) => {
     );
 
     const disliked = _.map(
-      _.filter(recommendedGames, (game) => !game.User_Game.liked),
+      _.filter(recommendedGames, (game) => !game.User_Game.disliked),
       ({ id }) => id + ''
     );
 

@@ -38,6 +38,7 @@ const getUserInfo = ({ id }) => {
               include: [
                 { model: Screenshot, attributes: attributes.screenshot },
                 { model: Genre, attributes: attributes.genre },
+                { model: Platform, attributes: attributes.platform },
               ],
               attributes: attributes.game,
               through: { where: { liked: true } },
