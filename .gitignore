@@ -2,3 +2,4 @@
 .envprod
 .htaccess
 node_modules/
+users.json

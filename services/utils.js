@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const fs = require('fs');
+const { User } = require('../database/init');
 
 // Generate access
 generateToken = ({ id, username }) => {
@@ -58,8 +61,43 @@ handleResponse = (req, res, statusCode, data, message) => {
   return res.status(statusCode).json(resObj);
 };
 
+makeUsers = async () => {
+  const amountUsers = 15;
+  let users = [];
+  for (let u = 0; u < amountUsers; u++) {
+    // Generate username
+    const username = `P${u + 1}`;
+
+    // Generate password
+    const password = generatePassword();
+
+    // Bcrypt password
+    const hashed = await bcrypt.hash(password, 12);
+
+    // Save user
+    users.push({ username, password });
+
+    // Add user to db
+    const user = await User.create({ username, password: hashed });
+    console.log(`${user.username} was saved to the DB.`);
+  }
+  const data = JSON.stringify(users);
+  fs.writeFileSync('./users.json', data);
+  console.log('Users saved to file.');
+};
+
+generatePassword = () => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  for (let i = 0; i < 15; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+};
+
 module.exports = {
   generateToken,
   verifyToken,
   handleResponse,
+  makeUsers,
 };

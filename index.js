@@ -7,12 +7,10 @@ const compression = require('compression');
 const helmet = require('helmet');
 const https = require('https');
 const cors = require('cors');
-
 /* END NPM PACKAGES */
 
 /* CUSTOM PACKAGES */
 const database = require('./database/init');
-const { concat } = require('lodash');
 /* END CUSTOM PACKAGES */
 
 /* VARIABLES */
@@ -23,7 +21,7 @@ const port = process.env.PORT || 3001;
 /* HEROKU MAGIC */
 // Keep Alive - Check every 25 minutes
 setInterval(function () {
-  console.log(new Date(Date.now()).toLocaleString(), 'Keeping app awake.');
+  console.log(new Date(Date.now()).toLocaleString(), 'Keeping apps awake.');
   https.get('https://hci2020.herokuapp.com/api/auth/wake');
   https.get('https://hci2020-python.herokuapp.com/wake');
 }, 25 * 60 * 1000);
@@ -48,11 +46,9 @@ database
     console.log(r);
     require('./database/relations');
 
-    /* DO ALL DB RELATED STUFF HERE*/
-    //require('./services/gamepuller').pullGames();
-
-    // const bcrypt = require('bcrypt');
-    // bcrypt.hash('', 12).then((val) => console.log(val));
+    // Add users to the db and create user file
+    // const { makeUsers } = require('./services/utils');
+    // makeUsers();
   })
   .catch((err) => console.error(err));
 
