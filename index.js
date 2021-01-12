@@ -21,11 +21,12 @@ const port = process.env.PORT || 3001;
 /* END VARIABLES */
 
 /* HEROKU MAGIC */
-// Keep Alive - Check every 15 minutes
-// setInterval(function () {
-//   console.log(new Date(Date.now()).toLocaleString(), 'Keeping app awake.');
-//   https.get('https://lnt-mail-backend.herokuapp.com/');
-// }, 15 * 60 * 1000);
+// Keep Alive - Check every 25 minutes
+setInterval(function () {
+  console.log(new Date(Date.now()).toLocaleString(), 'Keeping app awake.');
+  https.get('https://hci2020.herokuapp.com/api/auth/wake');
+  https.get('https://hci2020-python.herokuapp.com/wake');
+}, 25 * 60 * 1000);
 /* END HEROKU MAGIC */
 
 /* MIDDLEWARE */

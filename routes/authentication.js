@@ -4,6 +4,13 @@ const { check } = require('express-validator');
 const { validationMiddleware } = require('../middleware/validationMiddleware');
 const { login } = require('../services/authentication');
 
+router.get('/wake', (req, res) => {
+  return handleResponse(req, res, 200, {
+    success: true,
+    data: 'Waked',
+  });
+});
+
 router.post(
   '/login',
   [
