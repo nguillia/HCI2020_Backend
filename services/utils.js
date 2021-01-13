@@ -66,7 +66,7 @@ makeUsers = async () => {
   let users = [];
   for (let u = 0; u < amountUsers; u++) {
     // Generate username
-    const username = `P${u + 1}`;
+    const username = `P${u + 1}-`;
 
     // Generate password
     const password = generatePassword();
@@ -75,11 +75,13 @@ makeUsers = async () => {
     const hashed = await bcrypt.hash(password, 12);
 
     // Save user
-    users.push({ username, password });
+    users.push({ username: `${username}1`, password, system: 1 });
+    users.push({ username: `${username}2`, password, system: 2 });
 
     // Add user to db
-    const user = await User.create({ username, password: hashed });
-    console.log(`${user.username} was saved to the DB.`);
+    const user1 = await User.create({ username: `${username}1`, password: hashed, system: 1 });
+    const user2 = await User.create({ username: `${username}2`, password: hashed, system: 2 });
+    console.log(`${user1.username} and ${user2.username} were saved to the DB.`);
   }
   const data = JSON.stringify(users);
   fs.writeFileSync('./users.json', data);

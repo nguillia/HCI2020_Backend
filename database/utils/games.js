@@ -114,7 +114,7 @@ const getGamesGenres = ({ liked_genres, disliked_genres }) => {
           where: { followers: { [Sequelize.Op.gte]: 50 } },
           attributes: ['id', 'followers'],
           order: Sequelize.literal('rand()'),
-          limit: 10,
+          limit: 20,
         }),
         ({ id }) => id
       );
@@ -134,7 +134,7 @@ const getGamesGenres = ({ liked_genres, disliked_genres }) => {
               id: { [Sequelize.Op.notIn]: recommendations },
             },
             order: [['followers', 'DESC']],
-            limit: 10 - recommendations.length,
+            limit: 20 - recommendations.length,
             attributes: ['id', 'followers'],
           }),
           ({ id }) => id
