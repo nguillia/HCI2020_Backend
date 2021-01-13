@@ -42,7 +42,7 @@ require('./routes/routes')(app);
 /* FUNCTIONS */
 database
   .init()
-  .then((r) => {
+  .then(async (r) => {
     console.log(r);
     require('./database/relations');
 

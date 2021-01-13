@@ -13,7 +13,7 @@ const authMiddleware = async (req, res, next) => {
   verifyToken(token, async (err, payload) => {
     if (err) return handleResponse(req, res, 401);
     else {
-      req.body.user = await User.findOne({ where: { id: payload.userId }, attributes: ['id', 'username'] });
+      req.body.user = await User.findOne({ where: { id: payload.userId }, attributes: ['id', 'username', 'system'] });
       next();
     }
   });

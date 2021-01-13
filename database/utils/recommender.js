@@ -6,6 +6,7 @@ axios.defaults.baseURL = 'https://hci2020-python.herokuapp.com';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const getGenreBasedRecommendations = ({ userObj }) => {
+  console.log(`Getting Genre-Based recommendations for ${userObj.username}.`);
   return new Promise(async (resolve, reject) => {
     //Disliked genres
     const dislikedGenres = await userObj.getGenres();
@@ -48,6 +49,7 @@ const getGenreBasedRecommendations = ({ userObj }) => {
 };
 
 const getTextBasedRecommendations = ({ userObj }) => {
+  console.log(`Getting Text-Based recommendations for ${userObj.username}.`);
   return new Promise(async (resolve, reject) => {
     //Disliked genres
     const dislikedGenres = await userObj.getGenres();

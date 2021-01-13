@@ -11,6 +11,10 @@ const User = {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    system: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
   },
   options: {},
 };

@@ -12,11 +12,17 @@ const { isValidArray, toIntegerArray } = require('../middleware/validator');
 const { check } = require('express-validator');
 const _ = require('lodash');
 
-router.get('/cosine_similarity', [authMiddleware, validationMiddleware], async (req, res) => {
+router.get('/recommend', [authMiddleware, validationMiddleware], async (req, res) => {
+  console.log(req.body.user);
   try {
     return handleResponse(req, res, 200, {
       success: true,
-      data: { game: await getGenreBasedRecommendations({ userObj: req.body.user }) },
+      data: {
+        game:
+          req.body.user.system === 1
+            ? await getGenreBasedRecommendations({ userObj: req.body.user })
+            : await getTextBasedRecommendations({ userObj: req.body.user }),
+      },
     });
   } catch (err) {
     console.log('err', err);
@@ -24,17 +30,29 @@ router.get('/cosine_similarity', [authMiddleware, validationMiddleware], async (
   }
 });
 
-router.get('/tf_idf', [authMiddleware, validationMiddleware], async (req, res) => {
-  try {
-    return handleResponse(req, res, 200, {
-      success: true,
-      data: { game: await getTextBasedRecommendations({ userObj: req.body.user }) },
-    });
-  } catch (err) {
-    console.log('err', err);
-    return handleResponse(req, res, 400, {}, err);
-  }
-});
+// router.get('/cosine_similarity', [authMiddleware, validationMiddleware], async (req, res) => {
+//   try {
+//     return handleResponse(req, res, 200, {
+//       success: true,
+//       data: { game: await getGenreBasedRecommendations({ userObj: req.body.user }) },
+//     });
+//   } catch (err) {
+//     console.log('err', err);
+//     return handleResponse(req, res, 400, {}, err);
+//   }
+// });
+
+// router.get('/tf_idf', [authMiddleware, validationMiddleware], async (req, res) => {
+//   try {
+//     return handleResponse(req, res, 200, {
+//       success: true,
+//       data: { game: await getTextBasedRecommendations({ userObj: req.body.user }) },
+//     });
+//   } catch (err) {
+//     console.log('err', err);
+//     return handleResponse(req, res, 400, {}, err);
+//   }
+// });
 
 router.post(
   '/initialize',
