@@ -61,12 +61,13 @@ handleResponse = (req, res, statusCode, data, message) => {
   return res.status(statusCode).json(resObj);
 };
 
-makeUsers = async () => {
-  const amountUsers = 15;
+makeUsers = async (amountUsers = 1) => {
   let users = [];
+  let switchSystem = false;
   for (let u = 0; u < amountUsers; u++) {
     // Generate username
-    const username = `P${u + 1}-`;
+    // const username = `P${u + 1}-`;
+    const username = 'eval';
 
     // Generate password
     const password = generatePassword();
@@ -75,13 +76,14 @@ makeUsers = async () => {
     const hashed = await bcrypt.hash(password, 12);
 
     // Save user
-    users.push({ username: `${username}1`, password, system: 1 });
-    users.push({ username: `${username}2`, password, system: 2 });
+    users.push({ username: `${username}1`, password, system: switchSystem ? 2 : 1 });
+    users.push({ username: `${username}2`, password, system: switchSystem ? 1 : 2 });
 
     // Add user to db
-    const user1 = await User.create({ username: `${username}1`, password: hashed, system: 1 });
-    const user2 = await User.create({ username: `${username}2`, password: hashed, system: 2 });
+    const user1 = await User.create({ username: `${username}1`, password: hashed, system: switchSystem ? 2 : 1 });
+    const user2 = await User.create({ username: `${username}2`, password: hashed, system: switchSystem ? 1 : 2 });
     console.log(`${user1.username} and ${user2.username} were saved to the DB.`);
+    switchSystem = !switchSystem;
   }
   const data = JSON.stringify(users);
   fs.writeFileSync('./users.json', data);
@@ -91,7 +93,7 @@ makeUsers = async () => {
 generatePassword = () => {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 10; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;

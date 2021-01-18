@@ -20,11 +20,11 @@ const port = process.env.PORT || 3001;
 
 /* HEROKU MAGIC */
 // Keep Alive - Check every 25 minutes
-setInterval(function () {
-  console.log(new Date(Date.now()).toLocaleString(), 'Keeping apps awake.');
-  https.get('https://hci2020.herokuapp.com/api/auth/wake');
-  https.get('https://hci2020-python.herokuapp.com/wake');
-}, 25 * 60 * 1000);
+// setInterval(function () {
+//   console.log(new Date(Date.now()).toLocaleString(), 'Keeping apps awake.');
+//   https.get('https://hci2020.herokuapp.com/api/auth/wake');
+//   https.get('https://hci2020-python.herokuapp.com/wake');
+// }, 25 * 60 * 1000);
 /* END HEROKU MAGIC */
 
 /* MIDDLEWARE */
@@ -47,8 +47,8 @@ database
     require('./database/relations');
 
     // Add users to the db and create user file
-    // const { makeUsers } = require('./services/utils');
-    // makeUsers();
+    const { makeUsers } = require('./services/utils');
+    makeUsers(1);
   })
   .catch((err) => console.error(err));
 
